@@ -2,7 +2,6 @@ package com.ewok.twitchmeme.service;
 
 import com.ewok.twitchmeme.domain.member.Member;
 import com.ewok.twitchmeme.domain.member.MemberRepository;
-import com.ewok.twitchmeme.domain.post.Good;
 import com.ewok.twitchmeme.domain.post.GoodRepository;
 import com.ewok.twitchmeme.domain.post.Post;
 import com.ewok.twitchmeme.domain.post.PostRepository;

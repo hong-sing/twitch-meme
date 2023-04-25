@@ -18,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
 
 @Transactional
