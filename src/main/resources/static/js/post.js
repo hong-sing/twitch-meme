@@ -13,6 +13,11 @@ let post = {
         $('#update').on('click', function () {
             _this.update();
         });
+        $('#delete').on('click', function () {
+            if (confirm('정말 삭제하시겠습니까?')) {
+                _this.delete();
+            }
+        });
     },
     goToMemeSavePage : function () {
         let broadcastId = $('#streamerLogin').val();
@@ -97,6 +102,22 @@ let post = {
         }).fail(function (error) {
             alert(JSON.stringify(error));
         })
+    },
+    delete : function () {
+        let postId = $('#postId').val();
+        let broadcastId = $('#broadcastId').val();
+
+        $.ajax({
+            type: 'DELETE',
+            url: '/api/v1/post/' + postId,
+            dataType: 'json',
+            contentType: 'application/json; charset=utf-8'
+        }).done(function () {
+            alert('밈이 삭제되었습니다.');
+            window.location.href = '/meme/post/' + broadcastId;
+        }).fail(function (error) {
+            alert(JSON.stringify(error));
+        });
     }
 }
 

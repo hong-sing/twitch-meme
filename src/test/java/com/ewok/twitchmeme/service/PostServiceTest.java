@@ -6,6 +6,7 @@ import com.ewok.twitchmeme.domain.member.Role;
 import com.ewok.twitchmeme.domain.post.Post;
 import com.ewok.twitchmeme.domain.post.PostRepository;
 import com.ewok.twitchmeme.dto.PostSaveRequestDto;
+import com.ewok.twitchmeme.dto.PostUpdateRequestDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
 
 @Transactional
@@ -72,5 +74,50 @@ class PostServiceTest {
         //then
         Post findPost = postRepository.findById(postId).get();
         assertThat(title).isEqualTo(findPost.getTitle());
+    }
+
+    @Test
+    void 게시글_수정() {
+        //given
+        Post post = Post.builder()
+                        .title("제목")
+                        .summary("요약")
+                        .content("내용")
+                        .broadcastId("aaa1234")
+                        .build();
+        Post savePost = postRepository.save(post);
+        ArrayList<String> reference = new ArrayList<>();
+        PostUpdateRequestDto updateRequestDto = PostUpdateRequestDto.builder()
+                                                                    .title("수정된 제목")
+                                                                    .summary("수정된 요약")
+                                                                    .reference(reference)
+                                                                    .content("내용")
+                                                                    .build();
+
+        //when
+        postService.update(savePost.getId(), updateRequestDto);
+
+        //then
+        Post findPost = postRepository.findById(savePost.getId()).get();
+        assertThat("수정된 제목").isEqualTo(findPost.getTitle());
+    }
+
+    @Test
+    void 게시글_삭제() {
+        //given
+        Post post = Post.builder()
+                .title("제목")
+                .summary("요약")
+                .content("내용")
+                .broadcastId("aaa1234")
+                .build();
+        Post savePost = postRepository.save(post);
+
+        //when
+        postService.delete(savePost.getId());
+
+        //that
+        assertThat(postRepository.findById(savePost.getId())).isEmpty();
+
     }
 }

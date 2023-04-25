@@ -70,6 +70,12 @@ public class PostService {
         findPost.update(updateRequestDto.getTitle(), updateRequestDto.getSummary(), updateRequestDto.getContent(), youtubes);
         return postId;
     }
+    @Transactional
+    public Long delete(Long postId) {
+        Post post = postRepository.findById(postId).orElseThrow(() -> new IllegalArgumentException("해당 글이 없습니다. id=" + postId));
+        postRepository.delete(post);
+        return postId;
+    }
 
     public List<PostResponseDto> findByBroadcastId(String broadcastId) {
         return postRepository.findByBroadcastId(broadcastId).stream().map(PostResponseDto::new).collect(Collectors.toList());
