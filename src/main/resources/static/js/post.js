@@ -20,7 +20,10 @@ let post = {
         });
         $('#addGood').on('click', function () {
             _this.addGood();
-        })
+        });
+        $('#cancelGood').on('click', function () {
+            _this.cancelGood();
+        });
     },
     goToMemeSavePage : function () {
         let broadcastId = $('#streamerLogin').val();
@@ -134,6 +137,26 @@ let post = {
 
         $.ajax({
             type: 'POST',
+            url: '/api/v1/good',
+            dataType: 'json',
+            contentType: 'application/json; charset=utf-8',
+            data: JSON.stringify(data)
+        }).fail(function (error) {
+            alert(JSON.stringify(error));
+        });
+    },
+    cancelGood : function () {
+        $('#cancelGood').removeClass('btn-bd-purple').addClass('btn-bd-outline-purple');
+        let postId = $('#postId').val();
+        let memberId = $('#memberId').val();
+
+        let data = {
+            postId: postId,
+            memberId: memberId
+        };
+
+        $.ajax({
+            type: 'DELETE',
             url: '/api/v1/good',
             dataType: 'json',
             contentType: 'application/json; charset=utf-8',

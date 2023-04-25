@@ -77,4 +77,20 @@ class GoodServiceTest {
         assertThat(findGood.getPost()).isEqualTo(list.get(0));
     }
 
+    @Test
+    void 좋아요_취소() {
+        //given
+        Good good = Good.builder().post(post).member(member).build();
+        goodRepository.save(good);
+        List<Post> post1 = postRepository.findByBroadcastId("aaa123");
+        Member member1 = memberRepository.findByTwitchId(999L).get();
+        GoodRequestDto requestDto = GoodRequestDto.builder().postId(post1.get(0).getId()).memberId(member1.getId()).build();
+
+        //when
+        goodService.cancel(requestDto);
+
+        //then
+        assertThat(goodRepository.findById(good.getId())).isEmpty();
+    }
+
 }

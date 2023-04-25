@@ -86,9 +86,11 @@ public class PostService {
         Post post = postRepository.findById(postId).orElseThrow(() -> new IllegalArgumentException("해당 글이 없습니다. id=" + postId));
         List<Good> goods = post.getGoods();
         boolean checkGood = false;
-        for (int i = 0; i < goods.size(); i++) {
-            if (goods.get(i).getPost().getMember().getId().equals(memberId)) {
-                checkGood = true;
+        if (memberId != null) {
+            for (int i = 0; i < goods.size(); i++) {
+                if (goods.get(i).getPost().getMember().getId().equals(memberId)) {
+                    checkGood = true;
+                }
             }
         }
         return new PostsDetailResponseDto(post, checkGood);

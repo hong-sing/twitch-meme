@@ -60,8 +60,10 @@ public class IndexController {
     public String postDetail(Model model, @LoginMember SessionMember member, @PathVariable Long postId) {
         if (member != null) {
             model.addAttribute("member", member);
+            model.addAttribute("post", postService.findById(postId, member.getId()));
+        } else {
+            model.addAttribute("post", postService.findById(postId, null));
         }
-        model.addAttribute("post", postService.findById(postId, member.getId()));
         return "meme/post-detail";
     }
 
