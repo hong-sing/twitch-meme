@@ -55,4 +55,22 @@ public class IndexController {
         model.addAttribute("broadcastId", broadcastId);
         return "meme/post-save";
     }
+
+    @GetMapping("/meme/post-detail/{postId}")
+    public String postDetail(Model model, @LoginMember SessionMember member, @PathVariable Long postId) {
+        if (member != null) {
+            model.addAttribute("member", member);
+        }
+        model.addAttribute("post", postService.findById(postId));
+        return "meme/post-detail";
+    }
+
+    @GetMapping("/meme/post-update/{postId}")
+    public String postUpdate(Model model, @LoginMember SessionMember member, @PathVariable Long postId) {
+        if (member != null) {
+            model.addAttribute("member", member);
+        }
+        model.addAttribute("post", postService.findById(postId));
+        return "meme/post-update";
+    }
 }

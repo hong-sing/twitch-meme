@@ -47,4 +47,11 @@ public class Post extends BaseTimeEntity {
         this.member = member;
         this.youtubes = youtubes;
     }
+
+    public void update(String title, String summary, String content, List<Youtube> youtubes) {
+        this.title = title;
+        this.summary = summary;
+        this.content = content;
+        this.youtubes = youtubes;
+    }
 }

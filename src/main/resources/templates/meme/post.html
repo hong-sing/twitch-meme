@@ -36,8 +36,8 @@
                 </thead>
                 <tbody>
                 <tr th:each="list : ${posts}">
-                    <th scope="row" th:text="${list.getTitle()}">1</th>
-                    <td class="table-description" th:text="${list.getSummary()}"></td>
+                    <th scope="row"><a class="a-post-update" th:href="@{/meme/post-detail/{postId}(postId=${list.getId()})}" th:text="${list.getTitle()}"></a></th>
+                    <td class="table-description"><a class="a-post-update" th:href="@{/meme/post-detail/{postId}(postId=${list.getId()})}" th:text="${list.getSummary()}"></a></td>
                     <td th:if="${list.getYoutube().size()>0}">
                         <th:block th:each="youtube : ${list.getYoutube()}">
                             <a th:href="${youtube.getLink()}" target="_blank">

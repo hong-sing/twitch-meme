@@ -8,9 +8,12 @@ import com.ewok.twitchmeme.domain.post.Youtube;
 import com.ewok.twitchmeme.domain.post.YoutubeRepository;
 import com.ewok.twitchmeme.dto.PostResponseDto;
 import com.ewok.twitchmeme.dto.PostSaveRequestDto;
+import com.ewok.twitchmeme.dto.PostUpdateRequestDto;
+import com.ewok.twitchmeme.dto.PostsDetailResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +27,7 @@ public class PostService {
     private final MemberRepository memberRepository;
     private final YoutubeRepository youtubeRepository;
 
+    @Transactional
     public Long save(PostSaveRequestDto postSaveRequestDto) {
         Member member = memberRepository.findById(postSaveRequestDto.getMemberId()).orElseThrow(() -> new IllegalArgumentException("해당 회원이 없습니다. id=" + postSaveRequestDto.getMemberId()));
         Long postId = postRepository.save(postSaveRequestDto.toEntity(member)).getId();
@@ -46,7 +50,33 @@ public class PostService {
         return postId;
     }
 
+    @Transactional
+    public Long update(Long postId, PostUpdateRequestDto updateRequestDto) {
+        Post findPost = postRepository.findById(postId).orElseThrow(() -> new IllegalArgumentException("해당 글이 없습니다. id=" + postId));
+        List<Youtube> youtubes = youtubeRepository.findByPost(findPost);
+        for (Youtube youtube : youtubes) {
+            youtubeRepository.delete(youtube);
+        }
+
+        if (updateRequestDto.getReference().size() > 0) {
+            ArrayList<String> list = updateRequestDto.getReference();
+            for (int i = 0; i < list.size(); i++) {
+                youtubeRepository.save(updateRequestDto.toEntity(findPost, list.get(i)));
+            }
+            youtubes = youtubeRepository.findByPost(findPost);
+        } else {
+            youtubes = null;
+        }
+        findPost.update(updateRequestDto.getTitle(), updateRequestDto.getSummary(), updateRequestDto.getContent(), youtubes);
+        return postId;
+    }
+
     public List<PostResponseDto> findByBroadcastId(String broadcastId) {
         return postRepository.findByBroadcastId(broadcastId).stream().map(PostResponseDto::new).collect(Collectors.toList());
+    }
+
+    public PostsDetailResponseDto findById(Long postId) {
+        Post post = postRepository.findById(postId).orElseThrow(() -> new IllegalArgumentException("해당 글이 없습니다. id=" + postId));
+        return new PostsDetailResponseDto(post);
     }
 }

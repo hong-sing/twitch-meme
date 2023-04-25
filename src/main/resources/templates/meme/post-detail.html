@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="layout/layout">
+<th:block layout:fragment="content">
+    <div class="container py-5 my-5">
+        <div>
+            <div class="mb-3 pt-2">
+<!--                <strong type="text" class="form-control" id="meme" name="meme" th:text="${post.getTitle()}"></strong>-->
+                <strong th:text="${post.getTitle()}"></strong>
+            </div>
+            <div class="row mb-3">
+                <div class="col-auto">
+                    <img th:src="${post.getMember().getPicture()}" width="40" height="40" class="rounded-circle">
+                </div>
+                <div class="col col-sm">
+                    <p th:text="${post.getMember().getNickname()}"></p>
+                </div>
+            </div>
+            <div class="mb-3 pt-5" th:text="${post.getSummary()}">
+<!--                <textarea id="summary" class="form-control"  readonly></textarea>-->
+            </div>
+            <div class="mb-3 pt-2" id="description" name="description" th:utext="${post.getContent()}">
+<!--                <p id="description" name="description" th:utext="${post.getDescription()}"></p>-->
+            </div>
+            <br>
+            <input type="hidden" id="login" name="login" th:value="${post.getBroadcastId()}">
+            <input type="hidden" id="postId" name="id" th:value="${post.getId()}">
+            <th:block th:if="${member!=null}">
+                <button type="submit" class="btn btn-bd-purple ml-auto" id="updateForm" th:if="${post.getMember().getId()}==${member.getId()} or ${#strings.equals(member.getRole(), 'ADMIN')}">수정하기</button>
+                <button type="submit" class="btn btn-bd-purple ml-auto" id="delete" th:if="${post.getMember().getId()}==${member.getId()} or ${#strings.equals(member.getRole(), 'ADMIN')}">삭제</button>
+            </th:block>
+        </div>
+    </div>
+
+    <script src="/js/post.js"></script>
+</th:block>
+</html>

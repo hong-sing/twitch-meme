@@ -7,6 +7,12 @@ let post = {
         $('#save').on('click', function () {
             _this.save();
         });
+        $('#updateForm').on('click', function () {
+            _this.updateForm();
+        });
+        $('#update').on('click', function () {
+            _this.update();
+        });
     },
     goToMemeSavePage : function () {
         let broadcastId = $('#streamerLogin').val();
@@ -17,10 +23,13 @@ let post = {
             alert("로그인 후 이용해주세요");
         }
     },
+    updateForm : function () {
+        let postId = $('#postId').val();
+        window.location.href = '/meme/post-update/' + postId;
+    },
     save : function () {
         let description = $('#summernote').summernote('code');
         let youtubeIframe = $(description).find('iframe[src*=youtube]');
-        // console.log(youtubeIframe);
         let reference = null;
         let broadcastId = $('#broadcastId').val();
         let array = new Array();
@@ -29,12 +38,8 @@ let post = {
                 let iframe = $(value);
                 reference = iframe.attr('src').replace('//www.youtube.com/embed/', 'https://www.youtube.com/watch?v=');
                 array.push(reference);
-                // console.log(idx + " : " + iframe.attr('src').replace('//www.youtube.com/embed/', 'https://www.youtube.com/watch?v='));
             });
         }
-
-        // console.log($('#meme').val());
-        // console.log($('#summary').val());
 
         let data = {
             memberId: $('#member_id').val(),
@@ -57,20 +62,41 @@ let post = {
         }).fail(function (error) {
             alert(JSON.stringify(error));
         })
+    },
+    update : function () {
+        let description = $('#summernote').summernote('code');
+        let youtubeIframe = $(description).find('iframe[src*=youtube]');
+        let reference = null;
+        let broadcastId = $('#broadcastId').val();
+        let postId = $('#postId').val();
+        let array = new Array();
+        if (youtubeIframe.length > 0) {
+            $.each(youtubeIframe, function (idx, value) {
+                let iframe = $(value);
+                reference = iframe.attr('src').replace('//www.youtube.com/embed/', 'https://www.youtube.com/watch?v=');
+                array.push(reference);
+            });
+        }
 
-        // $.ajax({
-        //     type: 'POST',
-        //     url: '/api/v1/post',
-        //     dataType: 'json',
-        //     contentType: 'application/json; charset=utf-8',
-        //     data: JSON.stringify(data)
-        // }).done(function () {
-        //     alert('밈이 등록되었습니다.');
-        //     window.location.href = '/';
-        // }).fail(function (error) {
-        //     alert(JSON.stringify(error));
-        //     console.log(error)
-        // });
+        let data = {
+            title: $('#meme').val(),
+            summary: $('#summary').val(),
+            content: description,
+            reference: array
+        };
+
+        $.ajax({
+            type: 'PUT',
+            url: '/api/v1/post/' + postId,
+            dataType: 'json',
+            contentType: 'application/json; charset=utf-8',
+            data: JSON.stringify(data)
+        }).done(function () {
+            alert('성공');
+            window.location.href = '/meme/post/' + broadcastId;
+        }).fail(function (error) {
+            alert(JSON.stringify(error));
+        })
     }
 }
 

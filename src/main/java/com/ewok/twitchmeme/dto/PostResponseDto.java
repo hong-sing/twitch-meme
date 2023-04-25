@@ -11,6 +11,7 @@ import java.util.List;
 @Getter
 public class PostResponseDto {
 
+    private Long id;
     private String title;
     private Member member;
     private String summary;
@@ -18,6 +19,7 @@ public class PostResponseDto {
     private LocalDateTime modifiedDate;
 
     public PostResponseDto(Post post) {
+        this.id = post.getId();
         this.title = post.getTitle();
         this.member = post.getMember();
         this.summary = post.getSummary();
