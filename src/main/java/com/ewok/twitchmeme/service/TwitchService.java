@@ -4,6 +4,7 @@ import com.ewok.twitchmeme.domain.token.Token;
 import com.ewok.twitchmeme.domain.token.TokenRepository;
 import com.ewok.twitchmeme.dto.AccessTokenResponse;
 import com.ewok.twitchmeme.dto.ChannelData;
+import com.ewok.twitchmeme.dto.Streamer;
 import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.util.descriptor.web.JspConfigDescriptorImpl;
 import org.springframework.beans.factory.annotation.Value;
@@ -66,6 +67,32 @@ public class TwitchService {
             channelDataList.add(data);
         }
         return channelDataList;
+    }
+
+    public Streamer getStreamerInfo(String login) {
+
+        // 토큰이 유효하지 않다면 재발급
+        String token = getAccessToken();
+        if (!isAccessTokenValid(token)) {
+            token = reGetAccessToken();
+        }
+
+        // 정보 요청
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(token);
+        headers.set("Client-Id", clientId);
+
+        HttpEntity<?> httpEntity = new HttpEntity<>(headers);
+        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl("https://api.twitch.tv/helix/users")
+                .queryParam("login", login);
+
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<LinkedHashMap> response = restTemplate.exchange(builder.toUriString(), HttpMethod.GET, httpEntity, LinkedHashMap.class);
+        LinkedHashMap data = response.getBody();
+        ArrayList list = (ArrayList) data.get("data");
+        LinkedHashMap info = (LinkedHashMap) list.get(0);
+        Streamer streamer = new Streamer(info);
+        return streamer;
     }
 
     private String getAccessToken() {

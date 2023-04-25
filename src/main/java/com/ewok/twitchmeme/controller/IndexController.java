@@ -33,4 +33,22 @@ public class IndexController {
         model.addAttribute("channels", twitchService.getChannelSearchResult(streamer));
         return "meme/channel-list";
     }
+
+    @GetMapping("/meme/post/{broadcaster_login}")
+    public String post(Model model, @PathVariable String broadcaster_login, @LoginMember SessionMember member) {
+        if (member != null) {
+            model.addAttribute("member", member);
+        }
+        model.addAttribute("streamer", twitchService.getStreamerInfo(broadcaster_login));
+        return "meme/post";
+    }
+
+    @GetMapping("/meme/post-save/{broadcastId}")
+    public String postSave(Model model, @LoginMember SessionMember member, @PathVariable String broadcastId) {
+        if (member != null) {
+            model.addAttribute("member", member);
+        }
+        model.addAttribute("broadcastId", broadcastId);
+        return "meme/post-save";
+    }
 }

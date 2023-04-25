@@ -19,12 +19,14 @@
             <br>
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3 text-center">
                 <div class="col" th:each="list : ${channels}">
-                    <div class="p-2 card shadow-sm">
-                        <img class="bd-placeholder-img rounded-circle mx-auto" width="140" height="140" th:src="${list.getThumbnail_url()}"> </img>
-                        <div class="card-body">
-                            <p class="card-text" th:text="${list.getDisplay_name()}"></p>
+                    <a th:href="@{/meme/post/{broadcaster_login}(broadcaster_login=${list.getBroadcaster_login()})}">
+                        <div class="p-2 card shadow-sm">
+                            <img class="bd-placeholder-img rounded-circle mx-auto" width="140" height="140" th:src="${list.getThumbnail_url()}"> </img>
+                            <div class="card-body">
+                                <p class="card-text" th:text="${list.getDisplay_name()}"></p>
+                            </div>
                         </div>
-                    </div>
+                    </a>
                 </div>
             </div>
 

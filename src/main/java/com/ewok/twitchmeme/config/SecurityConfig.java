@@ -22,7 +22,7 @@ public class SecurityConfig {
                 .anyRequest()
                 .permitAll()
                 .and()
-                .csrf().ignoringAntMatchers("/h2-console/**")
+                .csrf().ignoringAntMatchers("/h2-console/**", "/api/**")
                 .and()
                 .logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET")).clearAuthentication(true)
                 .logoutSuccessUrl("/")
