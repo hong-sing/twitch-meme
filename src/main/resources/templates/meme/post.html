@@ -49,7 +49,7 @@
                     </td>
                     <td th:unless="${list.getYoutube().size()>0}"></td>
                     <td th:text="${list.getMember().getNickname()}"></td>
-                    <td>0</td>
+                    <td th:text="${list.getGoods().size()}"></td>
                     <td th:text="${#temporals.format(list.getModifiedDate(), 'yyyy년 MM월 dd일')}"></td>
                 </tr>
                 </tbody>

@@ -38,6 +38,9 @@ public class Post extends BaseTimeEntity {
     @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
     private List<Youtube> youtubes = new ArrayList<>();
 
+    @OneToMany(mappedBy = "post")
+    private List<Good> goods = new ArrayList<>();
+
     @Builder
     public Post(String title, String summary, String broadcastId, String content, Member member, List<Youtube> youtubes) {
         this.title = title;

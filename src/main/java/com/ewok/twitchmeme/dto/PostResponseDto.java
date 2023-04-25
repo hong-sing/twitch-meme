@@ -1,6 +1,7 @@
 package com.ewok.twitchmeme.dto;
 
 import com.ewok.twitchmeme.domain.member.Member;
+import com.ewok.twitchmeme.domain.post.Good;
 import com.ewok.twitchmeme.domain.post.Post;
 import com.ewok.twitchmeme.domain.post.Youtube;
 import lombok.Getter;
@@ -17,6 +18,7 @@ public class PostResponseDto {
     private String summary;
     private List<Youtube> youtube;
     private LocalDateTime modifiedDate;
+    private List<Good> goods;
 
     public PostResponseDto(Post post) {
         this.id = post.getId();
@@ -25,5 +27,6 @@ public class PostResponseDto {
         this.summary = post.getSummary();
         this.youtube = post.getYoutubes();
         this.modifiedDate = post.getModifiedDate();
+        this.goods = post.getGoods();
     }
 }

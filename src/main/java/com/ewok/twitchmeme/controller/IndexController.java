@@ -61,7 +61,7 @@ public class IndexController {
         if (member != null) {
             model.addAttribute("member", member);
         }
-        model.addAttribute("post", postService.findById(postId));
+        model.addAttribute("post", postService.findById(postId, member.getId()));
         return "meme/post-detail";
     }
 
@@ -70,7 +70,7 @@ public class IndexController {
         if (member != null) {
             model.addAttribute("member", member);
         }
-        model.addAttribute("post", postService.findById(postId));
+        model.addAttribute("post", postService.findById(postId, member.getId()));
         return "meme/post-update";
     }
 }

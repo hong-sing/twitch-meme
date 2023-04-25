@@ -18,6 +18,9 @@ let post = {
                 _this.delete();
             }
         });
+        $('#addGood').on('click', function () {
+            _this.addGood();
+        })
     },
     goToMemeSavePage : function () {
         let broadcastId = $('#streamerLogin').val();
@@ -115,6 +118,26 @@ let post = {
         }).done(function () {
             alert('밈이 삭제되었습니다.');
             window.location.href = '/meme/post/' + broadcastId;
+        }).fail(function (error) {
+            alert(JSON.stringify(error));
+        });
+    },
+    addGood : function () {
+        $('#addGood').removeClass('btn-bd-outline-purple').addClass('btn-bd-purple');
+        let postId = $('#postId').val();
+        let memberId = $('#memberId').val();
+
+        let data = {
+            postId: postId,
+            memberId: memberId
+        };
+
+        $.ajax({
+            type: 'POST',
+            url: '/api/v1/good',
+            dataType: 'json',
+            contentType: 'application/json; charset=utf-8',
+            data: JSON.stringify(data)
         }).fail(function (error) {
             alert(JSON.stringify(error));
         });

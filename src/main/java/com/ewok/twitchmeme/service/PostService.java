@@ -2,10 +2,7 @@ package com.ewok.twitchmeme.service;
 
 import com.ewok.twitchmeme.domain.member.Member;
 import com.ewok.twitchmeme.domain.member.MemberRepository;
-import com.ewok.twitchmeme.domain.post.Post;
-import com.ewok.twitchmeme.domain.post.PostRepository;
-import com.ewok.twitchmeme.domain.post.Youtube;
-import com.ewok.twitchmeme.domain.post.YoutubeRepository;
+import com.ewok.twitchmeme.domain.post.*;
 import com.ewok.twitchmeme.dto.PostResponseDto;
 import com.ewok.twitchmeme.dto.PostSaveRequestDto;
 import com.ewok.twitchmeme.dto.PostUpdateRequestDto;
@@ -27,6 +24,7 @@ public class PostService {
     private final MemberRepository memberRepository;
     private final YoutubeRepository youtubeRepository;
 
+    /** 게시글 저장 */
     @Transactional
     public Long save(PostSaveRequestDto postSaveRequestDto) {
         Member member = memberRepository.findById(postSaveRequestDto.getMemberId()).orElseThrow(() -> new IllegalArgumentException("해당 회원이 없습니다. id=" + postSaveRequestDto.getMemberId()));
@@ -50,6 +48,7 @@ public class PostService {
         return postId;
     }
 
+    /** 게시글 수정 */
     @Transactional
     public Long update(Long postId, PostUpdateRequestDto updateRequestDto) {
         Post findPost = postRepository.findById(postId).orElseThrow(() -> new IllegalArgumentException("해당 글이 없습니다. id=" + postId));
@@ -70,6 +69,8 @@ public class PostService {
         findPost.update(updateRequestDto.getTitle(), updateRequestDto.getSummary(), updateRequestDto.getContent(), youtubes);
         return postId;
     }
+
+    /** 게시글 삭제 */
     @Transactional
     public Long delete(Long postId) {
         Post post = postRepository.findById(postId).orElseThrow(() -> new IllegalArgumentException("해당 글이 없습니다. id=" + postId));
@@ -81,8 +82,15 @@ public class PostService {
         return postRepository.findByBroadcastId(broadcastId).stream().map(PostResponseDto::new).collect(Collectors.toList());
     }
 
-    public PostsDetailResponseDto findById(Long postId) {
+    public PostsDetailResponseDto findById(Long postId, Long memberId) {
         Post post = postRepository.findById(postId).orElseThrow(() -> new IllegalArgumentException("해당 글이 없습니다. id=" + postId));
-        return new PostsDetailResponseDto(post);
+        List<Good> goods = post.getGoods();
+        boolean checkGood = false;
+        for (int i = 0; i < goods.size(); i++) {
+            if (goods.get(i).getPost().getMember().getId().equals(memberId)) {
+                checkGood = true;
+            }
+        }
+        return new PostsDetailResponseDto(post, checkGood);
     }
 }
