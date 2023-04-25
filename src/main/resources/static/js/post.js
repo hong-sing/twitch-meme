@@ -22,7 +22,7 @@ let post = {
         let youtubeIframe = $(description).find('iframe[src*=youtube]');
         // console.log(youtubeIframe);
         let reference = null;
-        // let login = $('#login').val();
+        let broadcastId = $('#broadcastId').val();
         let array = new Array();
         if (youtubeIframe.length > 0) {
             $.each(youtubeIframe, function (idx, value) {
@@ -40,7 +40,7 @@ let post = {
             memberId: $('#member_id').val(),
             title: $('#meme').val(),
             summary: $('#summary').val(),
-            broadcastId: $('#broadcastId').val(),
+            broadcastId: broadcastId,
             content: description,
             reference: array
         };
@@ -53,6 +53,7 @@ let post = {
             data: JSON.stringify(data)
         }).done(function () {
             alert('성공');
+            window.location.href = '/meme/post/' + broadcastId;
         }).fail(function (error) {
             alert(JSON.stringify(error));
         })

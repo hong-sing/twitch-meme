@@ -1,10 +1,12 @@
 package com.ewok.twitchmeme.domain.post;
 
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+@Getter
 @NoArgsConstructor
 @Entity
 public class Youtube {
