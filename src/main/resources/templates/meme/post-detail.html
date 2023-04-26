@@ -4,7 +4,6 @@
     <div class="container py-5 my-5">
         <div>
             <div class="mb-3 pt-2">
-<!--                <strong type="text" class="form-control" id="meme" name="meme" th:text="${post.getTitle()}"></strong>-->
                 <strong th:text="${post.getTitle()}"></strong>
             </div>
             <div class="row mb-3">
@@ -16,10 +15,8 @@
                 </div>
             </div>
             <div class="mb-3 pt-5" th:text="${post.getSummary()}">
-<!--                <textarea id="summary" class="form-control"  readonly></textarea>-->
             </div>
             <div class="mb-3 pt-2" id="description" name="description" th:utext="${post.getContent()}">
-<!--                <p id="description" name="description" th:utext="${post.getDescription()}"></p>-->
             </div>
             <br>
             <input type="hidden" id="broadcastId" name="login" th:value="${post.getBroadcastId()}">
@@ -44,6 +41,88 @@
         </div>
     </div>
 
-    <script src="/js/post.js"></script>
+    <section class="gradient-custom">
+        <div class="container my-5 py-5">
+            <div class="row d-flex justify-content-center">
+                <div class="col-md-12 col-lg-10 col-xl-8">
+                    <div class="card">
+                        <div class="card-body p-4">
+                            <div class="card-footer py-3 border-0">
+                                <div class="d-flex flex-start w-100">
+                                    <div class="form-outline w-100">
+                                    <textarea class="form-control" id="comment" rows="4"
+                                              style="background: #fff;"></textarea>
+                                    </div>
+                                </div>
+                                <div class="float-end mt-2 pt-1">
+                                    <button type="button" class="btn btn-primary btn-sm" id="commentSave">등록</button>
+                                </div>
+                            </div>
+
+                            <div class="row pt-5">
+                                <div class="col">
+                                    <div class="d-flex flex-start mt-4" th:each="list : ${reply}" th:with="replyId=${list.getId()}" th:if="${list.getParentReply()?.getId()==null}">
+                                        <img class="rounded-circle shadow-1-strong me-3"
+                                             th:src="${list.getMember().getPicture()}" alt="avatar" width="65"
+                                             height="65" />
+                                        <div class="flex-grow-1 flex-shrink-1">
+                                            <div class="pb-3">
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <div class="d-flex align-items-center">
+                                                        <p class="mb-1" th:text="${list.getMember().getNickname()}" style="margin-right: 10px"></p>
+                                                        <span class="small" th:text="${#temporals.format(list.getModifiedDate(), 'yyyy.MM.dd HH:mm')}">- 2 hours ago</span>
+                                                    </div>
+                                                    <span class="small" th:id="writeComment+${replyId}" th:replyId="${replyId}" th:onclick="showComment(this.getAttribute('replyId'))">답글</span>
+                                                </div>
+                                                <p class="small mb-0" th:text="${list.getContent()}"></p>
+                                            </div>
+
+                                            <div class="card-footer py-3 pt-3 border-0" th:id="comment+${replyId}" style="display: none">
+                                                <div class="d-flex flex-start w-100">
+                                                    <div class="form-outline w-100">
+                                                        <textarea class="form-control" th:id="comment+${replyId}+Save" rows="4"
+                                                                  style="background: #fff;"></textarea>
+                                                    </div>
+                                                </div>
+                                                <div class="float-end mt-2 pt-1">
+                                                    <button type="button" class="btn btn-primary btn-sm" th:replyId="${replyId}" th:onclick="commentSave2(this.getAttribute('replyId'))">등록</button>
+                                                </div>
+                                            </div>
+
+
+                                            <th:block th:if="${list.getReplies().size()>0}">
+
+                                                <div class="d-flex flex-start mt-4" th:each="repliesList : ${list.getReplies()}">
+                                                    <a class="me-3" href="#">
+                                                        <img class="rounded-circle shadow-1-strong me-3"
+                                                             th:src="${repliesList.getMember().getPicture()}" alt="avatar" width="65"
+                                                             height="65" />
+                                                    </a>
+                                                    <div class="flex-grow-1 flex-shrink-1">
+                                                        <div class="pb-3">
+                                                            <div class="d-flex justify-content-between align-items-center">
+                                                                <div class="d-flex align-items-center">
+                                                                    <p class="mb-1" th:text="${repliesList.getMember().getNickname()}" style="margin-right: 10px"></p>
+                                                                    <span class="small" th:text="${#temporals.format(repliesList.getModifiedDate(), 'yyyy.MM.dd HH:mm')}">- 2 hours ago</span>
+                                                                </div>
+                                                            </div>
+                                                            <p class="small mb-0" th:text="${repliesList.getContent()}"></p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </th:block>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
 </th:block>
 </html>

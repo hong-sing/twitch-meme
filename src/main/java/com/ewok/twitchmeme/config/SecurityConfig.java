@@ -1,5 +1,6 @@
 package com.ewok.twitchmeme.config;
 
+import com.ewok.twitchmeme.domain.member.Role;
 import com.ewok.twitchmeme.service.CustomOAuth2UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -19,8 +20,8 @@ public class SecurityConfig {
         http.headers().frameOptions().disable();
         http.authorizeRequests()
                 .antMatchers("/h2-console/**").permitAll()
-                .anyRequest()
-                .permitAll()
+                .antMatchers("/api/v1/**").hasRole(Role.USER.name())
+                .anyRequest().permitAll()
                 .and()
                 .csrf().ignoringAntMatchers("/h2-console/**", "/api/**")
                 .and()

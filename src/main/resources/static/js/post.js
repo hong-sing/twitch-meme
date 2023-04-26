@@ -68,7 +68,6 @@ let post = {
             contentType: 'application/json; charset=utf-8',
             data: JSON.stringify(data)
         }).done(function () {
-            alert('성공');
             window.location.href = '/meme/post/' + broadcastId;
         }).fail(function (error) {
             alert(JSON.stringify(error));

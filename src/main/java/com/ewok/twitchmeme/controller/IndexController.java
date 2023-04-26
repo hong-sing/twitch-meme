@@ -4,6 +4,7 @@ import com.ewok.twitchmeme.dto.ChannelData;
 import com.ewok.twitchmeme.dto.LoginMember;
 import com.ewok.twitchmeme.dto.SessionMember;
 import com.ewok.twitchmeme.service.PostService;
+import com.ewok.twitchmeme.service.ReplyService;
 import com.ewok.twitchmeme.service.TwitchService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -19,6 +20,7 @@ public class IndexController {
 
     private final TwitchService twitchService;
     private final PostService postService;
+    private final ReplyService replyService;
 
     @GetMapping("/")
     public String index(Model model, @LoginMember SessionMember member) {
@@ -61,8 +63,10 @@ public class IndexController {
         if (member != null) {
             model.addAttribute("member", member);
             model.addAttribute("post", postService.findById(postId, member.getId()));
+            model.addAttribute("reply", replyService.findByPostId(postId));
         } else {
             model.addAttribute("post", postService.findById(postId, null));
+            model.addAttribute("reply", replyService.findByPostId(postId));
         }
         return "meme/post-detail";
     }
