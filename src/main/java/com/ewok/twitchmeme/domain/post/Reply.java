@@ -41,7 +41,7 @@ public class Reply extends BaseTimeEntity {
     @JoinColumn(name = "PARENT_ID")
     private Reply parent;
 
-    @OneToMany(mappedBy = "parent")
+    @OneToMany(mappedBy = "parent", cascade = {CascadeType.MERGE, CascadeType.REMOVE})
     private List<Reply> replies = new ArrayList<>();
 
     @Builder
@@ -52,5 +52,9 @@ public class Reply extends BaseTimeEntity {
         this.remove = remove;
         this.parent = parent;
         this.replies = replies;
+    }
+
+    public void update(Character remove) {
+        this.remove = remove;
     }
 }

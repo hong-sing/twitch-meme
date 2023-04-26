@@ -47,7 +47,7 @@
                 <div class="col-md-12 col-lg-10 col-xl-8">
                     <div class="card">
                         <div class="card-body p-4">
-                            <div class="card-footer py-3 border-0">
+                            <div class="card-footer py-3 border-0" th:if="${member!=null}">
                                 <div class="d-flex flex-start w-100">
                                     <div class="form-outline w-100">
                                     <textarea class="form-control" id="comment" rows="4"
@@ -58,7 +58,20 @@
                                     <button type="button" class="btn btn-primary btn-sm" id="commentSave">등록</button>
                                 </div>
                             </div>
+                            <div class="card-footer py-3 border-0" th:unless="${member!=null}">
+                                <div class="d-flex flex-start w-100">
+                                    <div class="form-outline w-100">
+                                    <textarea class="form-control" rows="4" placeholder="로그인 후 이용할 수 있습니다."
+                                              style="background: #fff;" readonly></textarea>
+                                    </div>
+                                </div>
+                                <div class="float-end mt-2 pt-1">
+                                    <button type="button" class="btn btn-primary btn-sm disabled">등록</button>
+                                </div>
+                            </div>
 
+
+                            <!-- 댓글 -->
                             <div class="row pt-5">
                                 <div class="col">
                                     <div class="d-flex flex-start mt-4" th:each="list : ${reply}" th:with="replyId=${list.getId()}" th:if="${list.getParentReply()?.getId()==null}">
@@ -72,11 +85,26 @@
                                                         <p class="mb-1" th:text="${list.getMember().getNickname()}" style="margin-right: 10px"></p>
                                                         <span class="small" th:text="${#temporals.format(list.getModifiedDate(), 'yyyy.MM.dd HH:mm')}">- 2 hours ago</span>
                                                     </div>
-                                                    <span class="small" th:id="writeComment+${replyId}" th:replyId="${replyId}" th:onclick="showComment(this.getAttribute('replyId'))">답글</span>
+                                                    <!-- Example split danger button -->
+                                                    <div class="btn-group" th:if="${member!=null}">
+                                                        <button type="button" class="btn"><span class="small" th:id="writeComment+${replyId}" th:replyId="${replyId}" th:onclick="showComment(this.getAttribute('replyId'))">답글</span></button>
+                                                        <th:block th:if="${member.getId()}==${list.getMember().getId()}">
+                                                            <button type="button" class="btn dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                                                                <span class="visually-hidden">Toggle Dropdown</span>
+                                                            </button>
+                                                            <ul class="dropdown-menu">
+                                                                <li><a class="dropdown-item" th:replyId="${replyId}" th:onclick="showCommentUpdate(this.getAttribute('replyId'))">수정</a></li>
+                                                                <li><a class="dropdown-item" th:replyId="${replyId}" th:onclick="deleteReply(this.getAttribute('replyId'))">삭제</a></li>
+                                                            </ul>
+                                                        </th:block>
+                                                    </div>
+
                                                 </div>
-                                                <p class="small mb-0" th:text="${list.getContent()}"></p>
+                                                <p class="small mb-0" th:if="${#strings.equals(list.getRemove(), 'N')}" th:text="${list.getContent()}"></p>
+                                                <p class="small mb-0" th:unless="${#strings.equals(list.getRemove(), 'N')}">삭제된 댓글입니다.</p>
                                             </div>
 
+                                            <!-- 대댓글 등록 -->
                                             <div class="card-footer py-3 pt-3 border-0" th:id="comment+${replyId}" style="display: none">
                                                 <div class="d-flex flex-start w-100">
                                                     <div class="form-outline w-100">
@@ -88,27 +116,53 @@
                                                     <button type="button" class="btn btn-primary btn-sm" th:replyId="${replyId}" th:onclick="commentSave2(this.getAttribute('replyId'))">등록</button>
                                                 </div>
                                             </div>
+                                            <!-- 댓글 수정 -->
+                                            <div class="card-footer py-3 pt-3 border-0" th:id="commentUpdateForm+${replyId}" style="display: none">
+                                                <div class="d-flex flex-start w-100">
+                                                    <div class="form-outline w-100">
+                                                        <textarea class="form-control" th:id="commentUpdate+${replyId}" rows="4"
+                                                                  style="background: #fff;"></textarea>
+                                                    </div>
+                                                </div>
+                                                <div class="float-end mt-2 pt-1">
+                                                    <button type="button" class="btn btn-primary btn-sm" th:replyId="${replyId}" th:onclick="commentUpdate(this.getAttribute('replyId'))">수정</button>
+                                                </div>
+                                            </div>
 
-
+                                            <!-- 대댓글 -->
                                             <th:block th:if="${list.getReplies().size()>0}">
 
-                                                <div class="d-flex flex-start mt-4" th:each="repliesList : ${list.getReplies()}">
-                                                    <a class="me-3" href="#">
-                                                        <img class="rounded-circle shadow-1-strong me-3"
-                                                             th:src="${repliesList.getMember().getPicture()}" alt="avatar" width="65"
-                                                             height="65" />
-                                                    </a>
-                                                    <div class="flex-grow-1 flex-shrink-1">
-                                                        <div class="pb-3">
-                                                            <div class="d-flex justify-content-between align-items-center">
-                                                                <div class="d-flex align-items-center">
-                                                                    <p class="mb-1" th:text="${repliesList.getMember().getNickname()}" style="margin-right: 10px"></p>
-                                                                    <span class="small" th:text="${#temporals.format(repliesList.getModifiedDate(), 'yyyy.MM.dd HH:mm')}">- 2 hours ago</span>
+                                                <div class="d-flex flex-start mt-2" th:each="repliesList : ${list.getReplies()}">
+                                                    <th:block  th:if="${#strings.equals(repliesList.getRemove(), 'N')}">
+                                                        <a class="me-3" href="#">
+                                                            <img class="rounded-circle shadow-1-strong me-3"
+                                                                 th:src="${repliesList.getMember().getPicture()}" alt="avatar" width="65"
+                                                                 height="65" />
+                                                        </a>
+                                                        <div class="flex-grow-1 flex-shrink-1">
+                                                            <div class="pb-3">
+                                                                <div class="d-flex justify-content-between align-items-center">
+                                                                    <div class="d-flex align-items-center">
+                                                                        <p class="mb-1" th:text="${repliesList.getMember().getNickname()}" style="margin-right: 10px"></p>
+                                                                        <span class="small" th:text="${#temporals.format(repliesList.getModifiedDate(), 'yyyy.MM.dd HH:mm')}">- 2 hours ago</span>
+                                                                    </div>
+                                                                    <th:block th:if="${member!=null}">
+                                                                        <div class="btn-group" th:if="${member.getId()}==${repliesList.getMember().getId()}">
+                                                                            <button type="button" class="btn dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                                                                                <span class="visually-hidden">Toggle Dropdown</span>
+                                                                            </button>
+                                                                            <ul class="dropdown-menu">
+                                                                                <li><a class="dropdown-item">수정</a></li>
+                                                                                <li><a class="dropdown-item" th:replyId="${repliesList.getId()}" th:onclick="deleteReply(this.getAttribute('replyId'))">삭제</a></li>
+                                                                            </ul>
+                                                                        </div>
+                                                                    </th:block>
                                                                 </div>
+                                                                <p class="small mb-0" th:text="${repliesList.getContent()}"></p>
+    <!--                                                            <p class="small mb-0" th:unless="${#strings.equals(repliesList.getRemove(), 'N')}">삭제된 댓글입니다.</p>-->
                                                             </div>
-                                                            <p class="small mb-0" th:text="${repliesList.getContent()}"></p>
                                                         </div>
-                                                    </div>
+                                                    </th:block>
                                                 </div>
 
                                             </th:block>

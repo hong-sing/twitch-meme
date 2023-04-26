@@ -24,11 +24,19 @@ public class ReplyRequestDto {
         this.parentId = parentId;
     }
 
-    public Reply toEntity(Post post, Member member, Reply reply) {
+    public Reply toEntity(Post post, Member member) {
         return Reply.builder()
                 .content(comment)
                 .post(post)
                 .member(member)
+                .build();
+    }
+
+    public Reply toEntity(Post post, Member member, Reply reply) {
+        return Reply.builder()
+                .post(post)
+                .member(member)
+                .content(comment)
                 .parent(reply)
                 .build();
     }

@@ -23,6 +23,7 @@ let comment = {
             contentType: 'application/json; charset=utf-8',
             data: JSON.stringify(data)
         }).done(function () {
+            alert('댓글이 등록되었습니다.');
             window.location.href = '/meme/post-detail/' + postId;
         }).fail(function (error) {
             alert(JSON.stringify(error));
@@ -32,6 +33,10 @@ let comment = {
 
 function showComment(replyId) {
     $('#comment' + replyId).toggle();
+}
+
+function showCommentUpdate(replyId) {
+    $('#commentUpdateForm' + replyId).toggle();
 }
 
 function commentSave2(replyId) {
@@ -53,10 +58,28 @@ function commentSave2(replyId) {
         contentType: 'application/json; charset=utf-8',
         data: JSON.stringify(data)
     }).done(function () {
+        alert('댓글이 등록되었습니다.');
         window.location.href = '/meme/post-detail/' + postId;
     }).fail(function (error) {
         alert(JSON.stringify(error));
     });
+}
+
+function deleteReply(replyId) {
+    let postId = $('#postId').val();
+
+    if (confirm('댓글을 삭제하시겠습니까?')) {
+        $.ajax({
+            type: 'PUT',
+            url: '/api/v1/reply/' + replyId,
+            dataType: 'json',
+            contentType: 'application/json; charset=utf-8'
+        }).done(function () {
+            window.location.href = '/meme/post-detail/' + postId;
+        }).fade(function (error) {
+            alert(JSON.stringify(error));
+        });
+    }
 }
 
 comment.init();

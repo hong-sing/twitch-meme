@@ -2,12 +2,12 @@ package com.ewok.twitchmeme.dto;
 
 import com.ewok.twitchmeme.domain.member.Member;
 import com.ewok.twitchmeme.domain.post.Reply;
-import lombok.Getter;
+import lombok.Data;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Getter
+@Data
 public class ReplyResponseDto {
 
     private Long id;
