@@ -36,7 +36,10 @@
                     <a th:href="@{/meme/post/{streamer}(streamer=${list.getUser_login()})}" style="text-decoration: none; color: inherit">
                         <div class="card shadow-sm">
                             <img th:src="@{https://static-cdn.jtvnw.net/previews-ttv/live_user_{user_login}-{width}x{height}.jpg (user_login=${list.getUser_login()}, width=440, height=248)}">
-                            <p th:text="${list.getUser_name()}">
+                            <div class="row py-1">
+                                <span class="col-9" th:text="${list.getUser_name()}">스트리머닉네임</span>
+                                <small class="col-3 text-body-secondary" th:text="${list.getViewer_count()+'명'}">시청자수</small>
+                            </div>
                         </div>
                     </a>
                 </div>
