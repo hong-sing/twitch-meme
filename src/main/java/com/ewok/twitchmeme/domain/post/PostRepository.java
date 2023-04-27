@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface PostRepository extends JpaRepository<Post, Long> {
     List<Post> findByBroadcastId(String broadcastId);
+
+    List<Post> findByMemberId(Long memberId);
 }

@@ -8,7 +8,6 @@ import com.ewok.twitchmeme.dto.PostSaveRequestDto;
 import com.ewok.twitchmeme.dto.PostUpdateRequestDto;
 import com.ewok.twitchmeme.dto.PostsDetailResponseDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -94,5 +93,9 @@ public class PostService {
             }
         }
         return new PostsDetailResponseDto(post, checkGood);
+    }
+
+    public List<PostResponseDto> findByMemberId(Long memberId) {
+        return postRepository.findByMemberId(memberId).stream().map(PostResponseDto::new).collect(Collectors.toList());
     }
 }
