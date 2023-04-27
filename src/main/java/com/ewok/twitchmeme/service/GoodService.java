@@ -7,10 +7,13 @@ import com.ewok.twitchmeme.domain.post.GoodRepository;
 import com.ewok.twitchmeme.domain.post.Post;
 import com.ewok.twitchmeme.domain.post.PostRepository;
 import com.ewok.twitchmeme.dto.GoodRequestDto;
+import com.ewok.twitchmeme.dto.PostResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -37,5 +40,16 @@ public class GoodService {
         }
         goodRepository.delete(findGood);
         return post.getId();
+    }
+
+    public List<PostResponseDto> findByMemberId(Long memberId) {
+        List<Good> goods = goodRepository.findByMemberId(memberId);
+        List<PostResponseDto> responseDtoList = new ArrayList<>();
+
+        for (Good good : goods) {
+            PostResponseDto dto = new PostResponseDto(good.getPost());
+            responseDtoList.add(dto);
+        }
+        return responseDtoList;
     }
 }

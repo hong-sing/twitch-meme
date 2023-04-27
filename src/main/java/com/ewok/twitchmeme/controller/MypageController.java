@@ -2,6 +2,7 @@ package com.ewok.twitchmeme.controller;
 
 import com.ewok.twitchmeme.dto.LoginMember;
 import com.ewok.twitchmeme.dto.SessionMember;
+import com.ewok.twitchmeme.service.GoodService;
 import com.ewok.twitchmeme.service.PostService;
 import com.ewok.twitchmeme.service.TwitchService;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,7 @@ public class MypageController {
 
     private final TwitchService twitchService;
     private final PostService postService;
+    private final GoodService goodService;
 
     @GetMapping("/mypage")
     public String mypage(Model model, @LoginMember SessionMember member) {
@@ -38,4 +40,10 @@ public class MypageController {
         return "mypage/writed-meme";
     }
 
+    @GetMapping("/mypage/liked-meme")
+    public String likedMeme(Model model, @LoginMember SessionMember member) {
+        model.addAttribute("member", member);
+        model.addAttribute("posts", goodService.findByMemberId(member.getId()));
+        return "mypage/liked-meme";
+    }
 }
