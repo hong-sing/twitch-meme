@@ -23,11 +23,11 @@ public class Reply extends BaseTimeEntity {
     @Column(name = "REPLY_ID")
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "POST_ID")
     private Post post;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
 
@@ -38,7 +38,7 @@ public class Reply extends BaseTimeEntity {
     @ColumnDefault("'N'")
     private Character remove;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "PARENT_ID")
     private Reply parent;
 

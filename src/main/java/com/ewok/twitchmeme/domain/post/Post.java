@@ -31,7 +31,7 @@ public class Post extends BaseTimeEntity {
     @Column(columnDefinition = "TEXT")
     private String content;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
 
@@ -42,13 +42,14 @@ public class Post extends BaseTimeEntity {
     private List<Good> goods = new ArrayList<>();
 
     @Builder
-    public Post(String title, String summary, String broadcastId, String content, Member member, List<Youtube> youtubes) {
+    public Post(String title, String summary, String broadcastId, String content, Member member, List<Youtube> youtubes, List<Good> goods) {
         this.title = title;
         this.summary = summary;
         this.broadcastId = broadcastId;
         this.content = content;
         this.member = member;
         this.youtubes = youtubes;
+        this.goods = goods;
     }
 
     public void update(String title, String summary, String content, List<Youtube> youtubes) {
