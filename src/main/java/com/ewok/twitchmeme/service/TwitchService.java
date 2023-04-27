@@ -1,8 +1,12 @@
 package com.ewok.twitchmeme.service;
 
+import com.ewok.twitchmeme.domain.member.MemberRepository;
 import com.ewok.twitchmeme.domain.token.Token;
 import com.ewok.twitchmeme.domain.token.TokenRepository;
 import com.ewok.twitchmeme.dto.*;
+import com.ewok.twitchmeme.dto.twitch.AccessToken;
+import com.ewok.twitchmeme.dto.twitch.FollowInfo;
+import com.ewok.twitchmeme.dto.twitch.FollowInfoData;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
@@ -26,6 +30,10 @@ public class TwitchService {
     private String clientSecret;
 
     private final TokenRepository tokenRepository;
+
+    private final MemberRepository memberRepository;
+
+    private final AccessToken accessToken;
 
     public List<ChannelData> getChannelSearchResult(String streamer) {
         String accessToken = getAccessToken();
@@ -177,5 +185,38 @@ public class TwitchService {
         tokenEntity.update(newToken);
 
         return newToken;
+    }
+
+
+    public List<FollowInfoData> getFollowList(Long memberId) {
+        Long twitchId = memberRepository.findById(memberId).get().getTwitchId();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(accessToken.getAccessToken());
+        headers.set("Client-Id", clientId);
+
+        HttpEntity<?> entity = new HttpEntity<>(headers);
+        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl("https://api.twitch.tv/helix/channels/followed")
+                .queryParam("user_id", twitchId)
+                .queryParam("first", 100);
+
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<LinkedHashMap> response = restTemplate.exchange(builder.toUriString(), HttpMethod.GET, entity, LinkedHashMap.class);
+        LinkedHashMap data = response.getBody();
+
+        FollowInfo followInfo = new FollowInfo(data);
+        List<FollowInfoData> infoData = followInfoToFollowInfoData(followInfo);
+        return infoData;
+    }
+
+    private List<FollowInfoData> followInfoToFollowInfoData(FollowInfo followInfo) {
+        List<FollowInfoData> list = new ArrayList<>();
+        int size = followInfo.getData().size();
+        for (int i = 0; i < size; i++) {
+            ArrayList arrayList = followInfo.getData();
+            LinkedHashMap map = (LinkedHashMap) arrayList.get(i);
+            FollowInfoData infoData = new FollowInfoData(map);
+            list.add(infoData);
+        }
+        return list;
     }
 }

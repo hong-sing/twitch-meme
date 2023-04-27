@@ -18,8 +18,10 @@
                 </ul>
 
                 <div class="text-end">
-                    <img th:if="${member!=null}" th:src="${member.getPicture()}" alt="mdo" width="32" height="32" class="rounded-circle">
-                    <span th:if="${member!=null}" th:text="${member.getNickname()}"></span>
+                    <a href="/mypage">
+                        <img th:if="${member!=null}" th:src="${member.getPicture()}" alt="mdo" width="32" height="32" class="rounded-circle">
+                        <span th:if="${member!=null}" th:text="${member.getNickname()}"></span>
+                    </a>
                     <a th:if="${member==null}" type="button" class="btn btn-outline-light me-2" href="/oauth2/authorization/twitch">Login</a>
                     <a th:unless="${member==null}" type="button" class="btn btn-outline-light me-2" href="/logout">Logout</a>
                 </div>

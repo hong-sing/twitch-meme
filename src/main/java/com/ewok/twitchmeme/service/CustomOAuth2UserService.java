@@ -4,6 +4,7 @@ import com.ewok.twitchmeme.domain.member.Member;
 import com.ewok.twitchmeme.domain.member.MemberRepository;
 import com.ewok.twitchmeme.dto.OAuthAttributes;
 import com.ewok.twitchmeme.dto.SessionMember;
+import com.ewok.twitchmeme.dto.twitch.AccessToken;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -23,6 +24,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
 
     private final MemberRepository memberRepository;
     private final HttpSession httpSession;
+    private final AccessToken accessToken;
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
@@ -31,6 +33,8 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
 
         String userNameAttributeName = userRequest.getClientRegistration().getProviderDetails().getUserInfoEndpoint().getUserNameAttributeName();
         OAuthAttributes attributes = OAuthAttributes.ofTwitch(userNameAttributeName, oAuth2User.getAttributes());
+
+        accessToken.setAccessToken(userRequest.getAccessToken().getTokenValue());
 
         Member member = saveOrUpdate(attributes);
         httpSession.setAttribute("member", new SessionMember(member));

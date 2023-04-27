@@ -20,7 +20,7 @@ public class SecurityConfig {
         http.headers().frameOptions().disable();
         http.authorizeRequests()
                 .antMatchers("/h2-console/**").permitAll()
-                .antMatchers("/api/v1/**").hasRole(Role.USER.name())
+                .antMatchers("/api/v1/**", "/mypage/**").hasRole(Role.USER.name())
                 .anyRequest().permitAll()
                 .and()
                 .csrf().ignoringAntMatchers("/h2-console/**", "/api/**")
