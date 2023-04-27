@@ -1,42 +1,69 @@
 let index = {
     init : function () {
-        // console.log("a");
         let _this = this;
         let streamer;
+        let meme;
         $('#searchButton').on('click', function () {
             streamer = $('#streamer').val();
             if (streamer.length < 1) {
                 alert('스트리머 닉네임 또는 ID를 입력해주세요');
             } else {
-                _this.search();
+                _this.searchStreamer();
             }
-            // console.log("z");
         });
         $("#streamer").keydown(function(event) {
             streamer = $('#streamer').val();
             if (event.which === 13) {
                 if (streamer.length < 1) {
-                    alert('스트리머 ID를 입력해주세요');
+                    alert('스트리머 닉네임 또는 ID를 입력해주세요');
                 } else {
                     event.preventDefault(); // 기본 이벤트 방지
-                    _this.search();
+                    _this.searchStreamer();
+                }
+            }
+        });
+        $('#searchMeme').on('click', function () {
+            meme = $('#meme').val();
+            if (meme.length < 1) {
+                alert('밈을 입력해주세요');
+            } else {
+                _this.searchMeme();
+            }
+        });
+        $("#meme").keydown(function(event) {
+            meme = $('#meme').val();
+            if (event.which === 13) {
+                if (meme.length < 1) {
+                    alert('밈을 입력해주세요');
+                } else {
+                    event.preventDefault(); // 기본 이벤트 방지
+                    _this.searchMeme();
                 }
             }
         });
     },
-    search : function () {
+    searchStreamer : function () {
         let streamer = $('#streamer').val();
-
-        // window.location.href = '/search/' + streamer;
 
         $.ajax({
             type: 'GET',
-            url: '/meme/streamer/' + streamer,
+            url: '/meme/channel-list/' + streamer,
         }).done(function () {
-            window.location.href = '/meme/streamer/' + streamer;
+            window.location.href = '/meme/channel-list/' + streamer;
         }).fail(function (error) {
             alert(error);
-            // console.log(error);
+        });
+    },
+    searchMeme : function () {
+        let meme = $('#meme').val();
+
+        $.ajax({
+            type: 'GET',
+            url: '/meme/post-meme/' + meme,
+        }).done(function () {
+            window.location.href = '/meme/post-meme/' + meme;
+        }).fail(function (error) {
+            alert(error);
         });
     }
 

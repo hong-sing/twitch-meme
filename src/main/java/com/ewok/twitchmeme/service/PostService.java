@@ -98,4 +98,8 @@ public class PostService {
     public List<PostResponseDto> findByMemberId(Long memberId) {
         return postRepository.findByMemberId(memberId).stream().map(PostResponseDto::new).collect(Collectors.toList());
     }
+
+    public List<PostResponseDto> findByMeme(String meme) {
+        return postRepository.findByMeme(meme).stream().map(PostResponseDto::new).collect(Collectors.toList());
+    }
 }

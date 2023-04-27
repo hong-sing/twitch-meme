@@ -28,8 +28,8 @@ public class IndexController {
         return "index";
     }
 
-    @GetMapping("/meme/streamer/{streamer}")
-    public String search(Model model, @LoginMember SessionMember member, @PathVariable String streamer) {
+    @GetMapping("/meme/channel-list/{streamer}")
+    public String searchChannel(Model model, @LoginMember SessionMember member, @PathVariable String streamer) {
         if (member != null) {
             model.addAttribute("member", member);
         }
@@ -44,7 +44,7 @@ public class IndexController {
         }
         model.addAttribute("streamer", twitchService.getStreamerInfo(broadcaster_login));
         model.addAttribute("posts", postService.findByBroadcastId(broadcaster_login));
-        return "meme/post";
+        return "meme/post-streamer";
     }
 
     @GetMapping("/meme/post-save/{broadcastId}")
@@ -76,5 +76,15 @@ public class IndexController {
         }
         model.addAttribute("post", postService.findById(postId, member.getId()));
         return "meme/post-update";
+    }
+
+    @GetMapping("/meme/post-meme/{meme}")
+    public String searchMeme(Model model, @LoginMember SessionMember member, @PathVariable String meme) {
+        System.out.println(meme);
+        if (member != null) {
+            model.addAttribute("member", member);
+        }
+        model.addAttribute("posts", postService.findByMeme(meme));
+        return "meme/post-meme";
     }
 }
