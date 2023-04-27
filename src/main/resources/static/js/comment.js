@@ -39,6 +39,10 @@ function showCommentUpdate(replyId) {
     $('#commentUpdateForm' + replyId).toggle();
 }
 
+function showCommentUpdate2(replyId) {
+    $('#commentUpdateForm2' + replyId).toggle();
+}
+
 function commentSave2(replyId) {
     let comment = $('#comment' + replyId + 'Save').val();
     let postId = $('#postId').val();
@@ -80,6 +84,40 @@ function deleteReply(replyId) {
             alert(JSON.stringify(error));
         });
     }
+}
+
+function commentUpdate(replyId) {
+    let comment = $('#commentUpdate' + replyId).val();
+    let postId = $('#postId').val();
+
+    $.ajax({
+        type: 'PUT',
+        url: '/api/v1/reply/' + replyId,
+        dataType: 'json',
+        contentType: 'application/json; charset=utf-8',
+        data: comment
+    }).done(function () {
+        window.location.href = '/meme/post-detail/' + postId;
+    }).fail(function (error) {
+        alert(JSON.stringify(error));
+    });
+}
+
+function commentUpdate2(replyId) {
+    let comment = $('#commentUpdate2' + replyId).val();
+    let postId = $('#postId').val();
+
+    $.ajax({
+        type: 'PUT',
+        url: '/api/v1/reply/' + replyId,
+        dataType: 'json',
+        contentType: 'application/json; charset=utf-8',
+        data: comment
+    }).done(function () {
+        window.location.href = '/meme/post-detail/' + postId;
+    }).fail(function (error) {
+        alert(JSON.stringify(error));
+    });
 }
 
 comment.init();

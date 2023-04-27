@@ -112,9 +112,11 @@ class ReplyServiceTest {
         //given
         List<Post> list = postRepository.findByBroadcastId("aaa123");
         Member member = memberRepository.findByTwitchId(999L).get();
+        List<Reply> replies = new ArrayList<>();
         Reply reply = Reply.builder()
                 .post(list.get(0))
                 .member(member)
+                .replies(replies)
                 .content("댓글내용")
                 .build();
         Long saveId = replyRepository.save(reply).getId();
@@ -194,5 +196,25 @@ class ReplyServiceTest {
         //then
         assertThat(replyRepository.findById(id).get().getRemove()).isEqualTo('Y');
         assertThat(replyRepository.findById(reply1.getId()).get().getRemove()).isEqualTo('N');
+    }
+
+    @Test
+    void 댓글_수정() {
+        //given
+        List<Post> list = postRepository.findByBroadcastId("aaa123");
+        Member member = memberRepository.findByTwitchId(999L).get();
+        Reply reply = Reply.builder()
+                .post(list.get(0))
+                .member(member)
+                .remove('N')
+                .content("댓글내용")
+                .build();
+        Reply parentReply = replyRepository.save(reply);
+
+        //when
+        replyService.updateContent(parentReply.getId(), "수정된 댓글 내용");
+
+        //then
+        assertThat(replyRepository.findById(parentReply.getId()).get().getContent()).isEqualTo("수정된 댓글 내용");
     }
 }

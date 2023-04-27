@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.result.UpdateCountOutput;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -56,5 +57,9 @@ public class Reply extends BaseTimeEntity {
 
     public void update(Character remove) {
         this.remove = remove;
+    }
+
+    public void update(String content) {
+        this.content = content;
     }
 }

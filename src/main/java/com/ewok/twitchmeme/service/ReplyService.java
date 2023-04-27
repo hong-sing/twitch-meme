@@ -54,7 +54,6 @@ public class ReplyService {
         if (isNoChild(replyId)) {
             delete(replyId);
         }
-
         return replyId;
     }
 
@@ -65,7 +64,7 @@ public class ReplyService {
 
     private boolean isNoChild(Long replyId) {
         Reply reply = findById(replyId);
-        return reply.getReplies() == null;
+        return reply.getReplies().size() == 0;
     }
 
     private void delete(Long replyId) {
@@ -77,4 +76,9 @@ public class ReplyService {
         return replyRepository.findById(replyId).orElseThrow(() -> new IllegalArgumentException("해당 댓글이 없습니다."));
     }
 
+    public Long updateContent(Long replyId, String content) {
+        Reply reply = findById(replyId);
+        reply.update(content);
+        return replyId;
+    }
 }

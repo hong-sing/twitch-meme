@@ -17,7 +17,11 @@ public class ReplyController {
     }
 
     @PutMapping("/api/v1/reply/{replyId}")
-    public Long updateRemoveY(@PathVariable Long replyId) {
-        return replyService.updateRemoveY(replyId);
+    public Long updateRemoveY(@PathVariable Long replyId, @RequestBody(required = false) String content) {
+        if (content != null) {
+            return replyService.updateContent(replyId, content);
+        } else {
+            return replyService.updateRemoveY(replyId);
+        }
     }
 }
