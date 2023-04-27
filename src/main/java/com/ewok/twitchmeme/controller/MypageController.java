@@ -18,14 +18,6 @@ public class MypageController {
     private final PostService postService;
     private final GoodService goodService;
 
-    @GetMapping("/mypage")
-    public String mypage(Model model, @LoginMember SessionMember member) {
-        if (member != null) {
-            model.addAttribute("member", member);
-        }
-        return "mypage/mypage";
-    }
-
     @GetMapping("/mypage/follow")
     public String follow(Model model, @LoginMember SessionMember member) {
         model.addAttribute("member", member);
