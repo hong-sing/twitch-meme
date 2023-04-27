@@ -1,6 +1,5 @@
 package com.ewok.twitchmeme.controller;
 
-import com.ewok.twitchmeme.dto.ChannelData;
 import com.ewok.twitchmeme.dto.LoginMember;
 import com.ewok.twitchmeme.dto.SessionMember;
 import com.ewok.twitchmeme.service.PostService;
@@ -11,8 +10,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RequiredArgsConstructor
 @Controller
@@ -27,6 +24,7 @@ public class IndexController {
         if (member != null) {
             model.addAttribute("member", member);
         }
+        model.addAttribute("streamInfoData", twitchService.getStreamInfo("ko"));
         return "index";
     }
 

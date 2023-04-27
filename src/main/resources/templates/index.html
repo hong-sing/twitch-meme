@@ -7,13 +7,30 @@
 
 <!--layout.html에 정의한 content부분-->
 <body layout:fragment="content">
-<div class="px-4 py-5 my-5">
-    <div class="p-3">
-        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
-            <input class="form-control form-control-sm me-2 w-50" id="streamer" name="streamer" type="search" placeholder="스트리머 닉네임 또는 ID를 입력해주세요" aria-label="Search">
-            <button class="btn btn-outline-success" id="searchButton" type="button">검색</button>
+    <div class="px-4 py-5 my-5">
+        <div class="p-3">
+            <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+                <input class="form-control form-control-sm me-2 w-50" id="streamer" name="streamer" type="search" placeholder="스트리머 닉네임 또는 ID를 입력해주세요" aria-label="Search">
+                <button class="btn btn-outline-success" id="searchButton" type="button">검색</button>
+            </div>
         </div>
     </div>
-</div>
+
+    <div class="album py-5 bg-body-tertiary">
+        <div class="container">
+            <h2>On Air</h2>
+            <br>
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+                <div class="col" th:each="list : ${streamInfoData}">
+                    <a th:href="@{/meme/post/{streamer}(streamer=${list.getUser_login()})}" style="text-decoration: none; color: inherit">
+                        <div class="card shadow-sm">
+                            <img th:src="@{https://static-cdn.jtvnw.net/previews-ttv/live_user_{user_login}-{width}x{height}.jpg (user_login=${list.getUser_login()}, width=440, height=248)}">
+                            <p th:text="${list.getUser_name()}">
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

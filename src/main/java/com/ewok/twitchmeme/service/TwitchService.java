@@ -2,11 +2,8 @@ package com.ewok.twitchmeme.service;
 
 import com.ewok.twitchmeme.domain.token.Token;
 import com.ewok.twitchmeme.domain.token.TokenRepository;
-import com.ewok.twitchmeme.dto.AccessTokenResponse;
-import com.ewok.twitchmeme.dto.ChannelData;
-import com.ewok.twitchmeme.dto.Streamer;
+import com.ewok.twitchmeme.dto.*;
 import lombok.RequiredArgsConstructor;
-import org.apache.tomcat.util.descriptor.web.JspConfigDescriptorImpl;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -15,12 +12,8 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URI;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.*;
 
 @RequiredArgsConstructor
 @Service
@@ -93,6 +86,47 @@ public class TwitchService {
         LinkedHashMap info = (LinkedHashMap) list.get(0);
         Streamer streamer = new Streamer(info);
         return streamer;
+    }
+
+    public List<StreamInfoData> getStreamInfo(String language) {
+        // 토큰이 유효하지 않다면 재발급
+        String token = getAccessToken();
+        if (!isAccessTokenValid(token)) {
+            token = reGetAccessToken();
+        }
+
+        // 정보 요청
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(token);
+        headers.set("Client-Id", clientId);
+        headers.setBearerAuth(token);
+
+        HttpEntity<?> httpEntity = new HttpEntity<>(headers);
+        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl("https://api.twitch.tv/helix/streams")
+                .queryParam("language", language)
+                .queryParam("first", 99);
+
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<LinkedHashMap> response = restTemplate.exchange(builder.toUriString(), HttpMethod.GET, httpEntity, LinkedHashMap.class);
+        LinkedHashMap data = response.getBody();
+
+        StreamInfo streamInfo = new StreamInfo(data);
+        List<StreamInfoData> infoData = streamInfoToStreamInfoData(streamInfo);
+
+        return infoData;
+    }
+
+
+     private List<StreamInfoData> streamInfoToStreamInfoData(StreamInfo streamInfo) {
+        List<StreamInfoData> list = new ArrayList<>();
+        int size = streamInfo.getData().size();
+        for (int i = 0; i < size; i++) {
+            ArrayList arrayList = streamInfo.getData();
+            LinkedHashMap map = (LinkedHashMap) arrayList.get(i);
+            StreamInfoData infoData = new StreamInfoData(map);
+            list.add(infoData);
+        }
+        return list;
     }
 
     private String getAccessToken() {
