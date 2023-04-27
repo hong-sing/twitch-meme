@@ -16,6 +16,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -42,10 +43,12 @@ class GoodServiceTest {
     private Member member;
     @BeforeEach
     void setUp() {
+        List<Good> goods = new ArrayList<>();
         post = Post.builder()
                 .title("제목")
                 .summary("요약")
                 .content("내용")
+                .goods(goods)
                 .broadcastId("aaa123")
                 .build();
 
@@ -80,17 +83,19 @@ class GoodServiceTest {
     @Test
     void 좋아요_취소() {
         //given
-        Good good = Good.builder().post(post).member(member).build();
-        goodRepository.save(good);
         List<Post> post1 = postRepository.findByBroadcastId("aaa123");
         Member member1 = memberRepository.findByTwitchId(999L).get();
+
+        Good good = Good.builder().post(post1.get(0)).member(member1).build();
+        Good saveGood = goodRepository.save(good);
+
         GoodRequestDto requestDto = GoodRequestDto.builder().postId(post1.get(0).getId()).memberId(member1.getId()).build();
 
         //when
         goodService.cancel(requestDto);
 
         //then
-        assertThat(goodRepository.findById(good.getId())).isEmpty();
+        assertThat(goodRepository.findById(saveGood.getId())).isEmpty();
     }
 
 }
