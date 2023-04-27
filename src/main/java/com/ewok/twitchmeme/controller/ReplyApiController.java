@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
-public class ReplyController {
+public class ReplyApiController {
 
     private final ReplyService replyService;
 
