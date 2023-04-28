@@ -9,6 +9,7 @@ import com.ewok.twitchmeme.domain.post.ReplyRepository;
 import com.ewok.twitchmeme.dto.ReplyRequestDto;
 import com.ewok.twitchmeme.dto.ReplyResponseDto;
 import lombok.RequiredArgsConstructor;
+import org.apache.tomcat.util.descriptor.web.JspConfigDescriptorImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,14 +32,13 @@ public class ReplyService {
         Reply parentReply = null;
         Reply savedReply = null;
         Long replyId = 0l;
+        System.out.println(requestDto.getParentId());
 
         if (requestDto.getParentId() != null) { //대댓글인경우
             parentReply = replyRepository.findById(requestDto.getParentId()).get();
 
-            savedReply = replyRepository.save(requestDto.toEntity(post, member, parentReply));
-
             //부모 댓글의 replies 필드에 대댓글 추가
-            parentReply.addReply(savedReply);
+            parentReply.addReply(requestDto.toEntity(post, member, parentReply));
 
         } else {    //댓글인경우
             savedReply = replyRepository.save(requestDto.toEntity(post, member));
@@ -47,37 +47,39 @@ public class ReplyService {
         //Member엔티티에 replyList 필드에 Reply 추가
         member.addReply(savedReply);
 
-        return savedReply.getId();
+        return requestDto.getPostId();
     }
 
     /** 댓글 삭제 */
     public Long updateRemoveY(Long replyId) {
         Reply reply = replyRepository.findById(replyId).orElseThrow(() -> new IllegalArgumentException("해당 댓글이 없습니다."));
-        reply.update('Y');
 
-        if (isNoChild(replyId)) {
-            delete(replyId);
+        if (!isNoChild(replyId)) {
+            reply.update('Y');
+            return replyId;
         }
+
+        if (isNoParent(reply)) {
+            replyRepository.delete(reply);
+            return replyId;
+        }
+
+        if (!isParentRemoveY(reply)) {
+            replyRepository.delete(reply);
+            return replyId;
+        }
+
+        if (isChildCountGreaterThanZero(reply)) {
+            replyRepository.delete(reply);
+            return replyId;
+        }
+
+        replyRepository.delete(reply.getParent());
         return replyId;
     }
 
-
     public List<ReplyResponseDto> findByPostId(Long postId) {
         return replyRepository.findByPostId(postId).stream().map(ReplyResponseDto::new).collect(Collectors.toList());
-    }
-
-    private boolean isNoChild(Long replyId) {
-        Reply reply = findById(replyId);
-        return reply.getReplies().size() == 0;
-    }
-
-    private void delete(Long replyId) {
-        Reply reply = replyRepository.findById(replyId).orElseThrow(() -> new IllegalArgumentException("해당 댓글이 없습니다."));
-        replyRepository.delete(reply);
-    }
-
-    private Reply findById(Long replyId) {
-        return replyRepository.findById(replyId).orElseThrow(() -> new IllegalArgumentException("해당 댓글이 없습니다."));
     }
 
     public Long updateContent(Long replyId, String content) {
@@ -85,4 +87,26 @@ public class ReplyService {
         reply.update(content);
         return replyId;
     }
+
+    private boolean isChildCountGreaterThanZero(Reply reply) {
+        return reply.getReplies().size() > 0;
+    }
+
+    private boolean isNoParent(Reply reply) {
+        return reply.getParent()==null;
+    }
+
+    private boolean isParentRemoveY(Reply reply) {
+        return reply.getParent().getRemove().equals('Y');
+    }
+
+    private boolean isNoChild(Long replyId) {
+        Reply reply = findById(replyId);
+        return reply.getReplies().size() == 0;
+    }
+
+    private Reply findById(Long replyId) {
+        return replyRepository.findById(replyId).orElseThrow(() -> new IllegalArgumentException("해당 댓글이 없습니다."));
+    }
+
 }

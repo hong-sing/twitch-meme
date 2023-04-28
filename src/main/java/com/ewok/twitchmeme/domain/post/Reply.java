@@ -42,7 +42,7 @@ public class Reply extends BaseTimeEntity {
     @JoinColumn(name = "PARENT_ID")
     private Reply parent;
 
-    @OneToMany(mappedBy = "parent", cascade = {CascadeType.REMOVE}, orphanRemoval = true)
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL)
     private List<Reply> replies = new ArrayList<>();
 
     @Builder
