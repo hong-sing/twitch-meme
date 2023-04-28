@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 //import static org.junit.jupiter.api.Assertions.*;
@@ -72,10 +73,11 @@ class ReplyServiceTest {
                 .build();
 
         //when
-        Long id = replyService.save(requestDto);
+        replyService.save(requestDto);
 
         //then
-        assertThat(replyRepository.findById(id).get().getContent()).isEqualTo("댓글");
+        List<Reply> replies = replyRepository.findByPostId(list.get(0).getId());
+        assertThat(replies.get(0).getContent()).isEqualTo("댓글");
     }
 
     @Test

@@ -87,10 +87,12 @@ class PostServiceTest {
     @Test
     void 게시글_수정() {
         //given
+        List<Youtube> youtubes = new ArrayList<>();
         Post post = Post.builder()
                         .title("제목")
                         .summary("요약")
                         .content("내용")
+                        .youtubes(youtubes)
                         .broadcastId("aaa1234")
                         .build();
         Post savePost = postRepository.save(post);
