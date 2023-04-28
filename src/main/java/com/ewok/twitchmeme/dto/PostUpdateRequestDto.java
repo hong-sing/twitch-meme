@@ -4,9 +4,11 @@ import com.ewok.twitchmeme.domain.post.Post;
 import com.ewok.twitchmeme.domain.post.Youtube;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 
+@NoArgsConstructor
 @Getter
 public class PostUpdateRequestDto {
 

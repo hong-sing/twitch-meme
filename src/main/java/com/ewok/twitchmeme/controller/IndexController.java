@@ -2,11 +2,15 @@ package com.ewok.twitchmeme.controller;
 
 import com.ewok.twitchmeme.dto.LoginMember;
 import com.ewok.twitchmeme.dto.SessionMember;
+import com.ewok.twitchmeme.dto.post.PostPagingListResponseDto;
 import com.ewok.twitchmeme.service.PostService;
 import com.ewok.twitchmeme.service.ReplyService;
 import com.ewok.twitchmeme.service.TwitchService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -38,17 +42,18 @@ public class IndexController {
     }
 
     @GetMapping("/meme/post/{broadcaster_login}")
-    public String post(Model model, @PathVariable String broadcaster_login, @LoginMember SessionMember member) {
+    public String post(Model model, @PathVariable String broadcaster_login, @LoginMember SessionMember member, @PageableDefault(sort = "modifiedDate", direction = Sort.Direction.DESC) Pageable pageable, @RequestParam(required = false, defaultValue = "0", value = "page") int pageNo) {
         if (member != null) {
             model.addAttribute("member", member);
         }
         model.addAttribute("streamer", twitchService.getStreamerInfo(broadcaster_login));
-        model.addAttribute("posts", postService.findByBroadcastId(broadcaster_login));
+        model.addAttribute("posts", postService.pagingFindByBroadcastId(broadcaster_login, pageable));
+        model.addAttribute("pageNo", pageNo);
         return "meme/post-streamer";
     }
 
     @GetMapping("/meme/post-save/{broadcastId}")
-    public String postSave(Model model, @LoginMember SessionMember member, @PathVariable String broadcastId, Pageable pageable) {
+    public String postSave(Model model, @LoginMember SessionMember member, @PathVariable String broadcastId) {
         if (member != null) {
             model.addAttribute("member", member);
         }
@@ -79,12 +84,14 @@ public class IndexController {
     }
 
     @GetMapping("/meme/post-meme/{meme}")
-    public String searchMeme(Model model, @LoginMember SessionMember member, @PathVariable String meme) {
+    public String searchMeme(Model model, @LoginMember SessionMember member, @PathVariable String meme, Pageable pageable, @RequestParam(required = false, defaultValue = "0", value = "page") int pageNo) {
         System.out.println(meme);
         if (member != null) {
             model.addAttribute("member", member);
         }
-        model.addAttribute("posts", postService.findByMeme(meme));
+        model.addAttribute("posts", postService.findByMeme(meme, pageable));
+        model.addAttribute("pageNo", pageNo);
+        model.addAttribute("meme", meme);
         return "meme/post-meme";
     }
 

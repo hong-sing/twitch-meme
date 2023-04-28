@@ -65,11 +65,10 @@ public class Post extends BaseTimeEntity {
         this.goods = goods;
     }
 
-    public void update(String title, String summary, String content, List<Youtube> youtubes) {
+    public void update(String title, String summary, String content) {
         this.title = title;
         this.summary = summary;
         this.content = content;
-        this.youtubes = youtubes;
     }
 
     //연관관계 메서드

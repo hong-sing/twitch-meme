@@ -35,7 +35,7 @@
                 </div>
             </nav>
 
-            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 pt-5" style="height: 700px;">
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 pt-5">
                 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                     <h1 class="h2">작성 밈 목록</h1>
                 </div>
@@ -43,7 +43,6 @@
                     <table class="table">
                         <thead>
                         <tr>
-                            <th scope="col">번호</th>
                             <th scope="col">밈</th>
                             <th scope="col">설명</th>
                             <th scope="col">유튜브</th>
@@ -53,8 +52,7 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr th:each="list, status : ${posts}">
-                            <th th:text="${status.index+1}"></th>
+                        <tr th:each="list, status : ${posts.getPostsList()}">
                             <th scope="row"><a class="a-post-update" th:href="@{/meme/post-detail/{postId}(postId=${list.getId()})}" th:text="${list.getTitle()}"></a></th>
                             <td class="table-description"><a class="a-post-update" th:href="@{/meme/post-detail/{postId}(postId=${list.getId()})}" th:text="${list.getSummary()}"></a></td>
                             <td th:if="${list.getYoutube().size()>0}">
@@ -73,6 +71,28 @@
                         </tr>
                         </tbody>
                     </table>
+                    <nav aria-label="Page navigation example" class="justify-content-center">
+                        <th:block th:with="start=${T(java.lang.Math).floor(pageNo/10)*10 + 1}, totalPage=${posts.getTotalPage()}">
+                            <th:block th:with="last=${start+9<totalPage?start+9:totalPage}">
+                                <ul class="pagination justify-content-center">
+                                    <li class="page-item" th:unless="${pageNo &lt; 10}">
+                                        <a class="page-link" th:href="@{/mypage/writed-meme(page=${start.intValue()-11})}" aria-label="Previous">
+                                            <span aria-hidden="true">&laquo;</span>
+                                        </a>
+                                    </li>
+                                    <th:block th:each="i : ${#numbers.sequence(start, last)}" th:if="${posts.getPostsList().size()>0}">
+                                        <li class="page-item active" th:if="${pageNo==i-1}"><a class="page-link" th:href="@{/mypage/writed-meme(page=${i-1})}" th:text="${i}"></a></li>
+                                        <li class="page-item" th:unless="${pageNo==i-1}"><a class="page-link" th:href="@{/mypage/writed-meme(page=${i-1})}" th:text="${i}"></a></li>
+                                    </th:block>
+                                    <li class="page-item" th:if="${last < totalPage}">
+                                        <a class="page-link" th:href="@{/mypage/writed-meme(page=${start.intValue()+9})}" aria-label="Next">
+                                            <span aria-hidden="true">&raquo;</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </th:block>
+                        </th:block>
+                    </nav>
                 </div>
             </main>
         </div>

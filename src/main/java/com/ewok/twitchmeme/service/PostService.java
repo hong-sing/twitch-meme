@@ -11,6 +11,7 @@ import com.ewok.twitchmeme.dto.post.PostPagingListResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -90,16 +91,13 @@ public class PostService {
         return postRepository.findByBroadcastId(broadcastId).stream().map(PostResponseDto::new).collect(Collectors.toList());
     }
 
-    public PostPagingListResponseDto pagingFindByBroadcastId(String broadcastId) {
-        PageRequest pageRequest = PageRequest.of(0, 15, Sort.by(Sort.Direction.DESC, "modifiedDate"));
-        Page<Post> result = postRepository.findByBroadcastId(broadcastId, pageRequest);
+    public PostPagingListResponseDto pagingFindByBroadcastId(String broadcastId, Pageable pageable) {
+        Page<Post> result = postRepository.findByBroadcastId(broadcastId, pageable);
         return PostPagingListResponseDto.builder()
                 .postsList(result.getContent())
                 .totalCount(result.getTotalElements())
                 .totalPage((long) result.getTotalPages())
                 .build();
-
-
     }
 
     public PostsDetailResponseDto findById(Long postId, Long memberId) {
@@ -116,11 +114,27 @@ public class PostService {
         return new PostsDetailResponseDto(post, checkGood);
     }
 
-    public List<PostResponseDto> findByMemberId(Long memberId) {
-        return postRepository.findByMemberId(memberId).stream().map(PostResponseDto::new).collect(Collectors.toList());
+    public PostPagingListResponseDto findByMemberId(Long memberId, Pageable pageable) {
+        Page<Post> result = postRepository.findByMemberId(memberId, pageable);
+        return PostPagingListResponseDto.builder()
+                .postsList(result.getContent())
+                .totalCount(result.getTotalElements())
+                .totalPage((long) result.getTotalPages())
+                .build();
     }
 
-    public List<PostResponseDto> findByMeme(String meme) {
-        return postRepository.findByMeme(meme).stream().map(PostResponseDto::new).collect(Collectors.toList());
+    public PostPagingListResponseDto findByMeme(String meme, Pageable pageable) {
+        Page<Post> result = postRepository.findByMeme(meme, pageable);
+        return PostPagingListResponseDto.builder()
+                .postsList(result.getContent())
+                .totalCount(result.getTotalElements())
+                .totalPage((long) result.getTotalPages())
+                .build();
+
+//        return postRepository.findByMeme(meme).stream().map(PostResponseDto::new).collect(Collectors.toList());
     }
+
+//    public List<PostResponseDto> findByMeme(String meme) {
+//        return postRepository.findByMeme(meme).stream().map(PostResponseDto::new).collect(Collectors.toList());
+//    }
 }

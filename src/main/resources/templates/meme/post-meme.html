@@ -15,7 +15,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="list : ${posts}">
+                <tr th:each="list : ${posts.getPostsList()}">
                     <th scope="row"><a class="a-post-update" th:href="@{/meme/post-detail/{postId}(postId=${list.getId()})}" th:text="${list.getTitle()}"></a></th>
                     <td class="table-description"><a class="a-post-update" th:href="@{/meme/post-detail/{postId}(postId=${list.getId()})}" th:text="${list.getSummary()}"></a></td>
                     <td th:if="${list.getYoutube().size()>0}">
@@ -34,6 +34,28 @@
                 </tr>
                 </tbody>
             </table>
+            <nav aria-label="Page navigation example" class="justify-content-center">
+                <th:block th:with="start=${T(java.lang.Math).floor(pageNo/10)*10 + 1}, totalPage=${posts.getTotalPage()}">
+                    <th:block th:with="last=${start+9<totalPage?start+9:totalPage}">
+                        <ul class="pagination justify-content-center">
+                            <li class="page-item" th:unless="${pageNo &lt; 10}">
+                                <a class="page-link" th:href="@{/meme/post-meme/{meme}(meme=${meme}, page=${start.intValue()-11})}" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+                            <th:block th:each="i : ${#numbers.sequence(start, last)}" th:if="${posts.getPostsList().size()>0}">
+                                <li class="page-item active" th:if="${pageNo==i-1}"><a class="page-link" th:href="@{/meme/post-meme/{meme}(meme=${meme}, page=${i-1})}" th:text="${i}"></a></li>
+                                <li class="page-item" th:unless="${pageNo==i-1}"><a class="page-link" th:href="@{/meme/post-meme/{meme}(meme=${meme}, page=${i-1})}" th:text="${i}"></a></li>
+                            </th:block>
+                            <li class="page-item" th:if="${last < totalPage}">
+                                <a class="page-link" th:href="@{/meme/post-meme/{meme}(meme=${meme}, page=${start.intValue()+9})}" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </th:block>
+                </th:block>
+            </nav>
         </div>
     </div>
 </th:block>
