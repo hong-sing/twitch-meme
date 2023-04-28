@@ -77,7 +77,10 @@ class GoodServiceTest {
 
         //then
         Good findGood = goodRepository.findById(id).get();
+        Post post = postRepository.findById(findGood.getPost().getId()).get();
         assertThat(findGood.getPost()).isEqualTo(list.get(0));
+        assertThat(post.getGoods().size()).isEqualTo(1);
+
     }
 
     @Test

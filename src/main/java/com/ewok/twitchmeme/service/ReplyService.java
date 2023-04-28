@@ -28,22 +28,26 @@ public class ReplyService {
     public Long save(ReplyRequestDto requestDto) {
         Post post = postRepository.findById(requestDto.getPostId()).orElseThrow(() -> new IllegalArgumentException("해당 글이 없습니다."));
         Member member = memberRepository.findById(requestDto.getMemberId()).orElseThrow(() -> new IllegalArgumentException("해당 회원이 없습니다."));
-        Reply reply = null;
+        Reply parentReply = null;
+        Reply savedReply = null;
         Long replyId = 0l;
 
         if (requestDto.getParentId() != null) { //대댓글인경우
-            reply = replyRepository.findById(requestDto.getParentId()).get();
-            Reply saveReply = replyRepository.save(requestDto.toEntity(post, member, reply));
+            parentReply = replyRepository.findById(requestDto.getParentId()).get();
 
-            //부모 댓글에 대댓글 컬렉션 추가
-            reply.getReplies().add(saveReply);
-            replyId = saveReply.getId();
+            savedReply = replyRepository.save(requestDto.toEntity(post, member, parentReply));
+
+            //부모 댓글의 replies 필드에 대댓글 추가
+            parentReply.addReply(savedReply);
 
         } else {    //댓글인경우
-            replyId = replyRepository.save(requestDto.toEntity(post, member)).getId();
+            savedReply = replyRepository.save(requestDto.toEntity(post, member));
         }
 
-        return replyId;
+        //Member엔티티에 replyList 필드에 Reply 추가
+        member.addReply(savedReply);
+
+        return savedReply.getId();
     }
 
     /** 댓글 삭제 */

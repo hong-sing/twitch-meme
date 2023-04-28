@@ -29,6 +29,8 @@ public class ReportService {
                                                         .member(member)
                                                         .reason(requestDto.getReportReason())
                                                         .build());
+        post.addReport(saveReport);
+
         return saveReport.getId();
     }
 }

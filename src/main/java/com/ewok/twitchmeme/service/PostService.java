@@ -32,7 +32,6 @@ public class PostService {
         // 유튜브 링크가 있다면 저장
         if (postSaveRequestDto.getReference().size() > 0) {
             ArrayList<String> list = postSaveRequestDto.getReference();
-            System.out.println(list);
 
             //Post 엔티티의 유튜브 컬렉션에 유튜브 엔티티 추가
             for (int i = 0; i < list.size(); i++) {
@@ -40,7 +39,13 @@ public class PostService {
                 post.addYoutube(saveYoutube);
             }
         }
-        return postRepository.save(post).getId();
+
+        Post savedPost = postRepository.save(post);
+
+        //Member 엔티티의 postList 필드에 Post 추가
+        member.addPost(savedPost);
+
+        return savedPost.getId();
     }
 
     /** 게시글 수정 */

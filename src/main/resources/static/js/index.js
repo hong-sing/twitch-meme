@@ -61,6 +61,11 @@ let index = {
                 }
             }
         });
+        $('#withdrawal').on('click', function () {
+            if (confirm('회원 탈퇴 하시겠습니까?')) {
+                _this.withdrawal();
+            }
+        })
     },
     searchStreamer : function () {
         let streamer = $('#streamer').val();
@@ -94,6 +99,19 @@ let index = {
             url: '/streamer/channel-list/' + streamerFollow,
         }).done(function () {
             window.location.href = '/streamer/channel-list/' + streamerFollow;
+        }).fail(function (error) {
+            alert(error);
+        });
+    },
+    withdrawal : function () {
+        let memberId = $('#memberId').val();
+
+        $.ajax({
+            type: 'DELETE',
+            url: '/api/v1/member/' + memberId,
+        }).done(function () {
+            alert('회원 탈퇴 되었습니다. 계정 연결은 트위치 설정에서 직접 해제하셔야 합니다. \n 다시 로그인 시 재가입 됩니다.');
+            window.location.href = '/';
         }).fail(function (error) {
             alert(error);
         });

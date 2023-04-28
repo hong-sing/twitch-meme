@@ -1,10 +1,15 @@
 package com.ewok.twitchmeme.domain.member;
 
+import com.ewok.twitchmeme.domain.post.Good;
+import com.ewok.twitchmeme.domain.post.Post;
+import com.ewok.twitchmeme.domain.post.Reply;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @NoArgsConstructor
@@ -26,7 +31,17 @@ public class Member {
 
     @Enumerated(EnumType.STRING)
     @Column
-    private Role role;
+    private Role role;  //USER, ADMIN
+
+    //회원탈퇴 -> 작성한 게시글, 댓글, 좋아요 표시 모두 삭제
+    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Post> postList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Reply> replyList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Good> goodList = new ArrayList<>();
 
     @Builder
     public Member(Long id, Long twitchId, String nickname, String picture, Role role) {
@@ -45,5 +60,19 @@ public class Member {
 
     public String getRoleKey() {
         return this.role.getKey();
+    }
+
+
+    //연관관계 메서드
+    public void addPost(Post post) {
+        this.postList.add(post);
+    }
+
+    public void addReply(Reply reply) {
+        this.replyList.add(reply);
+    }
+
+    public void addGood(Good good) {
+        this.goodList.add(good);
     }
 }
