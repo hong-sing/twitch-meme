@@ -32,7 +32,6 @@ public class ReplyService {
         Reply parentReply = null;
         Reply savedReply = null;
         Long replyId = 0l;
-        System.out.println(requestDto.getParentId());
 
         if (requestDto.getParentId() != null) { //대댓글인경우
             parentReply = replyRepository.findById(requestDto.getParentId()).get();
