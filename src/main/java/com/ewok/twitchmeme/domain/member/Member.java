@@ -1,5 +1,6 @@
 package com.ewok.twitchmeme.domain.member;
 
+import com.ewok.twitchmeme.domain.BaseTimeEntity;
 import com.ewok.twitchmeme.domain.post.Good;
 import com.ewok.twitchmeme.domain.post.Post;
 import com.ewok.twitchmeme.domain.post.Reply;
@@ -14,7 +15,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @Entity
-public class Member {
+public class Member extends BaseTimeEntity {
     
     @Id @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "MEMBER_ID")
