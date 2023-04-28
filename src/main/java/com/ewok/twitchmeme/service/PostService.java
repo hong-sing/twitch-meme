@@ -27,24 +27,20 @@ public class PostService {
     @Transactional
     public Long save(PostSaveRequestDto postSaveRequestDto) {
         Member member = memberRepository.findById(postSaveRequestDto.getMemberId()).orElseThrow(() -> new IllegalArgumentException("해당 회원이 없습니다. id=" + postSaveRequestDto.getMemberId()));
-        Long postId = postRepository.save(postSaveRequestDto.toEntity(member)).getId();
+        Post post = new Post(postSaveRequestDto.getTitle(), postSaveRequestDto.getSummary(), postSaveRequestDto.getBroadcastId(), postSaveRequestDto.getContent(), member);
 
         // 유튜브 링크가 있다면 저장
         if (postSaveRequestDto.getReference().size() > 0) {
-            Post post = postRepository.findById(postId).orElseThrow(() -> new IllegalArgumentException("해당 글을 찾을 수 없습니다. id=" + postId));
             ArrayList<String> list = postSaveRequestDto.getReference();
+            System.out.println(list);
 
-            //양방향 연관관계
-            //Youtube 엔티티
+            //Post 엔티티의 유튜브 컬렉션에 유튜브 엔티티 추가
             for (int i = 0; i < list.size(); i++) {
-                youtubeRepository.save(postSaveRequestDto.toEntity(post, list.get(i)));
+                Youtube saveYoutube = youtubeRepository.save(postSaveRequestDto.toEntity(post, list.get(i)));
+                post.addYoutube(saveYoutube);
             }
-            //Post 엔티티
-            List<Youtube> youtubes = youtubeRepository.findByPost(post);
-            post.setYoutubes(youtubes);
-            postRepository.save(post);
         }
-        return postId;
+        return postRepository.save(post).getId();
     }
 
     /** 게시글 수정 */

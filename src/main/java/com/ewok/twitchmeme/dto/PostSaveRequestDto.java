@@ -30,17 +30,6 @@ public class PostSaveRequestDto {
         this.reference = reference;
     }
 
-    public Post toEntity(Member member) {
-        return Post.builder()
-                .title(title)
-                .summary(summary)
-                .content(content)
-                .broadcastId(broadcastId)
-                .member(member)
-                .build();
-
-    }
-
     public Youtube toEntity(Post post, String link) {
         return Youtube.builder()
                 .post(post)

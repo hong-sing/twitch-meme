@@ -5,6 +5,8 @@ import com.ewok.twitchmeme.domain.member.MemberRepository;
 import com.ewok.twitchmeme.domain.member.Role;
 import com.ewok.twitchmeme.domain.post.Post;
 import com.ewok.twitchmeme.domain.post.PostRepository;
+import com.ewok.twitchmeme.domain.post.Youtube;
+import com.ewok.twitchmeme.domain.post.YoutubeRepository;
 import com.ewok.twitchmeme.dto.PostSaveRequestDto;
 import com.ewok.twitchmeme.dto.PostUpdateRequestDto;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,6 +18,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -33,6 +36,9 @@ class PostServiceTest {
 
     @Autowired
     PostRepository postRepository;
+
+    @Autowired
+    YoutubeRepository youtubeRepository;
 
     private Member member;
 
@@ -72,7 +78,10 @@ class PostServiceTest {
 
         //then
         Post findPost = postRepository.findById(postId).get();
+        List<Youtube> youtubes = youtubeRepository.findAll();
         assertThat(title).isEqualTo(findPost.getTitle());
+        assertThat(findPost.getYoutubes().get(0).getLink()).contains("youtube1");
+        assertThat(youtubes.get(0).getLink()).contains("youtube1");
     }
 
     @Test

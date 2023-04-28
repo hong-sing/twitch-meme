@@ -35,11 +35,20 @@ public class Post extends BaseTimeEntity {
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Youtube> youtubes = new ArrayList<>();
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private List<Good> goods = new ArrayList<>();
+
+
+    public Post(String title, String summary, String broadcastId, String content, Member member) {
+        this.title = title;
+        this.summary = summary;
+        this.broadcastId = broadcastId;
+        this.content = content;
+        this.member = member;
+    }
 
     @Builder
     public Post(String title, String summary, String broadcastId, String content, Member member, List<Youtube> youtubes, List<Good> goods) {
@@ -57,5 +66,10 @@ public class Post extends BaseTimeEntity {
         this.summary = summary;
         this.content = content;
         this.youtubes = youtubes;
+    }
+
+    //연관관계 메서드
+    public void addYoutube(Youtube youtube) {
+        this.youtubes.add(youtube);
     }
 }
