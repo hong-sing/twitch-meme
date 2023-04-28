@@ -87,4 +87,28 @@ public class IndexController {
         model.addAttribute("posts", postService.findByMeme(meme));
         return "meme/post-meme";
     }
+
+    @GetMapping("/streamer/channel-search")
+    public String searchStreamer(Model model, @LoginMember SessionMember member) {
+        model.addAttribute("memeber", member);
+        return "streamer/channel-search";
+    }
+
+    @GetMapping("/streamer/channel-list/{streamer}")
+    public String searchStreamerList(Model model, @PathVariable String streamer, @LoginMember SessionMember member) {
+        if (member != null) {
+            model.addAttribute("member", member);
+        }
+        model.addAttribute("channels", twitchService.getChannelSearchResult(streamer));
+        return "streamer/channel-list";
+    }
+
+    @GetMapping("/streamer/streamer-follow/{streamerId}")
+    public String getFollowList(Model model, @LoginMember SessionMember member, @PathVariable String streamerId) {
+        if (member != null) {
+            model.addAttribute("member", member);
+        }
+        model.addAttribute("followList", twitchService.getStreamerFollowList(streamerId));
+        return "streamer/streamer-follow";
+    }
 }

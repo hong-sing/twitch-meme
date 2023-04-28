@@ -4,9 +4,7 @@ import com.ewok.twitchmeme.domain.member.MemberRepository;
 import com.ewok.twitchmeme.domain.token.Token;
 import com.ewok.twitchmeme.domain.token.TokenRepository;
 import com.ewok.twitchmeme.dto.*;
-import com.ewok.twitchmeme.dto.twitch.AccessToken;
-import com.ewok.twitchmeme.dto.twitch.FollowInfo;
-import com.ewok.twitchmeme.dto.twitch.FollowInfoData;
+import com.ewok.twitchmeme.dto.twitch.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
@@ -215,6 +213,42 @@ public class TwitchService {
             ArrayList arrayList = followInfo.getData();
             LinkedHashMap map = (LinkedHashMap) arrayList.get(i);
             FollowInfoData infoData = new FollowInfoData(map);
+            list.add(infoData);
+        }
+        return list;
+    }
+
+    public List<StreamerFollowInfoData> getStreamerFollowList(String streamerId) {
+        String accessToken = getAccessToken();
+        if (!isAccessTokenValid(accessToken)) {
+            accessToken = reGetAccessToken();
+        }
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(accessToken);
+        headers.set("Client-Id", clientId);
+
+        HttpEntity<?> entity = new HttpEntity<>(headers);
+        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl("https://api.twitch.tv/helix/users/follows")
+                .queryParam("from_id", streamerId)
+                .queryParam("first", 100);
+
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<LinkedHashMap> response = restTemplate.exchange(builder.toUriString(), HttpMethod.GET, entity, LinkedHashMap.class);
+        LinkedHashMap data = response.getBody();
+
+        StreamerFollowInfo followInfo = new StreamerFollowInfo(data);
+        List<StreamerFollowInfoData> infoData = streamerFollowInfoToStreamerFollowInfoData(followInfo);
+        return infoData;
+    }
+
+    private List<StreamerFollowInfoData> streamerFollowInfoToStreamerFollowInfoData(StreamerFollowInfo followInfo) {
+        List<StreamerFollowInfoData> list = new ArrayList<>();
+        int size = followInfo.getData().size();
+        for (int i = 0; i < size; i++) {
+            ArrayList arrayList = followInfo.getData();
+            LinkedHashMap map = (LinkedHashMap) arrayList.get(i);
+            StreamerFollowInfoData infoData = new StreamerFollowInfoData(map);
             list.add(infoData);
         }
         return list;
