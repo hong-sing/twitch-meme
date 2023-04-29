@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="layout/layout">
+<th:block layout:fragment="content">
+    <div class="px-4 py-5 my-5 text-center">
+        <div class="container">
+            <img class="d-block mx-auto mb-4" th:src="${streamer.getProfile_image_url()}" alt="" width="300" height="300">
+            <a th:href="@{http://www.twitch.tv/{streamer}(streamer=${streamer.getLogin()})}" target="_blank">
+                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-twitch" viewBox="0 0 16 16">
+                    <path d="M3.857 0 1 2.857v10.286h3.429V16l2.857-2.857H9.57L14.714 8V0H3.857zm9.714 7.429-2.285 2.285H9l-2 2v-2H4.429V1.143h9.142v6.286z"/>
+                    <path d="M11.857 3.143h-1.143V6.57h1.143V3.143zm-3.143 0H7.571V6.57h1.143V3.143z"/>
+                </svg>
+            </a>
+            <h1 class="display-5 fw-bold text-body-emphasis" th:text="${streamer.getDisplay_name()}"></h1><h5 th:text="${streamer.getLogin()}"></h5>
+            <div class="col-lg-6 mx-auto">
+                <p class="lead mb-4" th:text="${streamer.getDescription()}"></p>
+            </div>
+        </div>
+        <div class="container">
+            <div class="d-flex justify-content-end mb-3">
+                <th:block th:if="${member!=null}">
+                    <input type="hidden" id="isLogin" th:value="${member.getNickname()}">
+                </th:block>
+                <input type="hidden" id="streamerLogin" th:value="${streamer.getLogin()}">
+                <a type="button" class="btn btn-bd-purple ml-auto" id="saveMeme">밈 등록</a>
+            </div>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">밈</th>
+                    <th scope="col">설명</th>
+                    <th scope="col">유튜브</th>
+                    <th scope="col">작성자</th>
+                    <th scope="col">좋아요</th>
+                    <th scope="col">최종수정일</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="list, status : ${posts.getPostsList()}">
+                    <th scope="row"><a class="a-post-update" th:href="@{/meme/post-detail/{postId}(postId=${list.getId()})}" th:text="${list.getTitle()}"></a></th>
+                    <td class="table-description"><a class="a-post-update" th:href="@{/meme/post-detail/{postId}(postId=${list.getId()})}" th:text="${list.getSummary()}"></a></td>
+                    <td th:if="${list.getYoutube().size()>0}">
+                        <th:block th:each="youtube : ${list.getYoutube()}">
+                            <a th:href="${youtube.getLink()}" target="_blank">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#dc3545" class="bi bi-youtube btn-outline-danger" viewBox="0 0 16 16">
+                                    <path d="M8.051 1.999h.089c.822.003 4.987.033 6.11.335a2.01 2.01 0 0 1 1.415 1.42c.101.38.172.883.22 1.402l.01.104.022.26.008.104c.065.914.073 1.77.074 1.957v.075c-.001.194-.01 1.108-.082 2.06l-.008.105-.009.104c-.05.572-.124 1.14-.235 1.558a2.007 2.007 0 0 1-1.415 1.42c-1.16.312-5.569.334-6.18.335h-.142c-.309 0-1.587-.006-2.927-.052l-.17-.006-.087-.004-.171-.007-.171-.007c-1.11-.049-2.167-.128-2.654-.26a2.007 2.007 0 0 1-1.415-1.419c-.111-.417-.185-.986-.235-1.558L.09 9.82l-.008-.104A31.4 31.4 0 0 1 0 7.68v-.123c.002-.215.01-.958.064-1.778l.007-.103.003-.052.008-.104.022-.26.01-.104c.048-.519.119-1.023.22-1.402a2.007 2.007 0 0 1 1.415-1.42c.487-.13 1.544-.21 2.654-.26l.17-.007.172-.006.086-.003.171-.007A99.788 99.788 0 0 1 7.858 2h.193zM6.4 5.209v4.818l4.157-2.408L6.4 5.209z"/>
+                                </svg>
+                            </a>
+                        </th:block>
+                    </td>
+                    <td th:unless="${list.getYoutube().size()>0}"></td>
+                    <td th:text="${list.getMember().getNickname()}"></td>
+                    <td th:text="${list.getGoods().size()}"></td>
+                    <td th:text="${#temporals.format(list.getModifiedDate(), 'yyyy년 MM월 dd일')}"></td>
+                </tr>
+                </tbody>
+            </table>
+            <nav aria-label="Page navigation example" class="justify-content-center">
+                <th:block th:with="start=${T(java.lang.Math).floor(pageNo/10)*10 + 1}, totalPage=${posts.getTotalPage()}">
+                    <th:block th:with="last=${start+9<totalPage?start+9:totalPage}">
+                        <ul class="pagination justify-content-center">
+                            <li class="page-item" th:unless="${pageNo &lt; 10}">
+                                <a class="page-link" th:href="@{/meme/post/{broadcaster_login}(broadcaster_login=${streamer.getLogin()}, page=${start.intValue()-11})}" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+                            <th:block th:each="i : ${#numbers.sequence(start, last)}" th:if="${posts.getPostsList().size()>0}">
+                                <li class="page-item active" th:if="${pageNo==i-1}"><a class="page-link" th:href="@{/meme/post/{broadcaster_login}(broadcaster_login=${streamer.getLogin()}, page=${i-1})}" th:text="${i}"></a></li>
+                                <li class="page-item" th:unless="${pageNo==i-1}"><a class="page-link" th:href="@{/meme/post/{broadcaster_login}(broadcaster_login=${streamer.getLogin()}, page=${i-1})}" th:text="${i}"></a></li>
+                            </th:block>
+                            <li class="page-item" th:if="${last < totalPage}">
+                                <a class="page-link" th:href="@{/meme/post/{broadcaster_login}(broadcaster_login=${streamer.getLogin()}, page=${start.intValue()+9})}" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </th:block>
+                </th:block>
+            </nav>
+        </div>
+    </div>
+</th:block>
+</html>

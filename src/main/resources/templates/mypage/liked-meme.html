@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="layout/layout">
+<th:block layout:fragment="content">
+
+    <div class="container-fluid">
+        <div class="row">
+            <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-body-tertiary sidebar collapse">
+                <div class="position-sticky pt-3 sidebar-sticky">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="/mypage/writed-meme">
+                                <span data-feather="home" class="align-text-bottom"></span>
+                                작성 밈
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/mypage/liked-meme">
+                                <span data-feather="file" class="align-text-bottom"></span>
+                                좋아하는 밈
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/mypage/follow">
+                                <span data-feather="users" class="align-text-bottom"></span>
+                                팔로우 한 스트리머
+                            </a>
+                        </li>
+                        </li>
+                        <input type="hidden" id="memberId" th:value="${member.getId()}">
+                        <a class="nav-link" id="withdrawal">
+                            <span data-feather="users" class="align-text-bottom"></span>
+                            회원 탈퇴
+                        </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 pt-5">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h2">작성 밈 목록</h1>
+                </div>
+                <div class="container">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">번호</th>
+                            <th scope="col">밈</th>
+                            <th scope="col">설명</th>
+                            <th scope="col">유튜브</th>
+                            <th scope="col">작성자</th>
+                            <th scope="col">좋아요</th>
+                            <th scope="col">최종수정일</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="list, status : ${posts}">
+                            <th th:text="${status.index+1}"></th>
+                            <th scope="row"><a class="a-post-update" th:href="@{/meme/post-detail/{postId}(postId=${list.getId()})}" th:text="${list.getTitle()}"></a></th>
+                            <td class="table-description"><a class="a-post-update" th:href="@{/meme/post-detail/{postId}(postId=${list.getId()})}" th:text="${list.getSummary()}"></a></td>
+                            <td th:if="${list.getYoutube().size()>0}">
+                                <th:block th:each="youtube : ${list.getYoutube()}">
+                                    <a th:href="${youtube.getLink()}" target="_blank">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#dc3545" class="bi bi-youtube btn-outline-danger" viewBox="0 0 16 16">
+                                            <path d="M8.051 1.999h.089c.822.003 4.987.033 6.11.335a2.01 2.01 0 0 1 1.415 1.42c.101.38.172.883.22 1.402l.01.104.022.26.008.104c.065.914.073 1.77.074 1.957v.075c-.001.194-.01 1.108-.082 2.06l-.008.105-.009.104c-.05.572-.124 1.14-.235 1.558a2.007 2.007 0 0 1-1.415 1.42c-1.16.312-5.569.334-6.18.335h-.142c-.309 0-1.587-.006-2.927-.052l-.17-.006-.087-.004-.171-.007-.171-.007c-1.11-.049-2.167-.128-2.654-.26a2.007 2.007 0 0 1-1.415-1.419c-.111-.417-.185-.986-.235-1.558L.09 9.82l-.008-.104A31.4 31.4 0 0 1 0 7.68v-.123c.002-.215.01-.958.064-1.778l.007-.103.003-.052.008-.104.022-.26.01-.104c.048-.519.119-1.023.22-1.402a2.007 2.007 0 0 1 1.415-1.42c.487-.13 1.544-.21 2.654-.26l.17-.007.172-.006.086-.003.171-.007A99.788 99.788 0 0 1 7.858 2h.193zM6.4 5.209v4.818l4.157-2.408L6.4 5.209z"/>
+                                        </svg>
+                                    </a>
+                                </th:block>
+                            </td>
+                            <td th:unless="${list.getYoutube().size()>0}"></td>
+                            <td th:text="${list.getMember().getNickname()}"></td>
+                            <td th:text="${list.getGoods().size()}"></td>
+                            <td th:text="${#temporals.format(list.getModifiedDate(), 'yyyy년 MM월 dd일')}"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </main>
+        </div>
+    </div>
+</th:block>
+</html>

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="layout/layout">
+<th:block layout:fragment="content">
+    <div class="container py-5 my-5">
+        <div>
+            <div class="mb-3">
+                <th:block th:if="${member!=null}">
+                    <input type="hidden" class="form-control" id="member_id" name="member_id" th:value="${member.getId()}">
+                </th:block>
+            </div>
+            <div class="mb-3">
+                <label for="meme" class="form-label">밈</label>
+                <input type="text" class="form-control" id="meme" name="meme">
+            </div>
+            <div class="mb-3">
+                <label for="summary" class="form-label">간단한 설명</label>
+                <textarea id="summary" class="form-control"></textarea>
+            </div>
+            <label for="summernote" class="form-label">자세한 설명</label>
+            <textarea id="summernote" name="description"></textarea>
+            <br>
+            <input type="hidden" id="broadcastId" name="broadcastId" th:value="${broadcastId}">
+            <button type="submit" class="btn btn-bd-purple ml-auto" id="save">등록</button>
+        </div>
+    </div>
+
+</th:block>
+</html>

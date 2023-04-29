@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="layout/layout">
+<th:block layout:fragment="content">
+    <div class="container py-5 my-5">
+        <div>
+            <div class="mb-3 pt-2">
+                <strong th:text="${post.getTitle()}"></strong>
+            </div>
+            <div class="row mb-3">
+                <div class="col-auto">
+                    <img th:src="${post.getMember().getPicture()}" width="40" height="40" class="rounded-circle">
+                </div>
+                <div class="col col-sm">
+                    <p th:text="${post.getMember().getNickname()}"></p>
+                </div>
+            </div>
+            <div class="mb-3 pt-5" th:text="${post.getSummary()}">
+            </div>
+            <div class="mb-3 pt-2" id="description" name="description" th:utext="${post.getContent()}">
+            </div>
+            <br>
+            <input type="hidden" id="broadcastId" name="login" th:value="${post.getBroadcastId()}">
+            <input type="hidden" id="postId" name="id" th:value="${post.getId()}">
+            <th:block th:if="${member!=null}">
+                <input type="hidden" id="memberId" th:value="${member.getId()}">
+                <button type="submit" class="btn btn-bd-purple ml-auto" id="updateForm" th:if="${post.getMember().getId()}==${member.getId()} or ${#strings.equals(member.getRole(), 'ADMIN')}">수정하기</button>
+                <button type="submit" class="btn btn-bd-purple ml-auto" id="delete" th:if="${post.getMember().getId()}==${member.getId()} or ${#strings.equals(member.getRole(), 'ADMIN')}">삭제</button>
+<!--                <button type="submit" class="btn btn-bd-purple ml-auto" id="report" th:if="${post.getMember().getId()}==${member.getId()}">신고</button>-->
+                <button type="button" class="btn btn-bd-purple" th:if="${post.getMember().getId()}==${member.getId()}" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">신고하기</button>
+                <button th:if="${post.isCheckGood()}" type="button" class="btn btn-bd-purple" id="cancelGood">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-star" viewBox="0 0 16 16">
+                        <path d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256 4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73 3.522-3.356c.33-.314.16-.888-.282-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356-.83 4.73zm4.905-2.767-3.686 1.894.694-3.957a.565.565 0 0 0-.163-.505L1.71 6.745l4.052-.576a.525.525 0 0 0 .393-.288L8 2.223l1.847 3.658a.525.525 0 0 0 .393.288l4.052.575-2.906 2.77a.565.565 0 0 0-.163.506l.694 3.957-3.686-1.894a.503.503 0 0 0-.461 0z"/>
+                    </svg>
+                    좋아요
+                </button>
+                <button th:unless="${post.isCheckGood()}" type="button" class="btn btn-bd-outline-purple" id="addGood">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-star" viewBox="0 0 16 16">
+                        <path d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256 4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73 3.522-3.356c.33-.314.16-.888-.282-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356-.83 4.73zm4.905-2.767-3.686 1.894.694-3.957a.565.565 0 0 0-.163-.505L1.71 6.745l4.052-.576a.525.525 0 0 0 .393-.288L8 2.223l1.847 3.658a.525.525 0 0 0 .393.288l4.052.575-2.906 2.77a.565.565 0 0 0-.163.506l.694 3.957-3.686-1.894a.503.503 0 0 0-.461 0z"/>
+                    </svg>
+                    좋아요
+                </button>
+            </th:block>
+        </div>
+    </div>
+
+    <!-- 신고 모달 -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">신고</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label for="reportReason" class="col-form-label">신고 사유:</label>
+                            <textarea class="form-control" id="reportReason" style="height: 200px"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="report" class="btn btn-primary">신고</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- 댓글 영역 -->
+    <section class="gradient-custom">
+        <div class="container my-5 py-5">
+            <div class="row d-flex justify-content-center">
+                <div class="col-md-12 col-lg-10 col-xl-8">
+                    <div class="card">
+                        <div class="card-body p-4">
+                            <div class="card-footer py-3 border-0" th:if="${member!=null}">
+                                <div class="d-flex flex-start w-100">
+                                    <div class="form-outline w-100">
+                                    <textarea class="form-control" id="comment" rows="4"
+                                              style="background: #fff;"></textarea>
+                                    </div>
+                                </div>
+                                <div class="float-end mt-2 pt-1">
+                                    <button type="button" class="btn btn-primary btn-sm" id="commentSave">등록</button>
+                                </div>
+                            </div>
+                            <div class="card-footer py-3 border-0" th:unless="${member!=null}">
+                                <div class="d-flex flex-start w-100">
+                                    <div class="form-outline w-100">
+                                    <textarea class="form-control" rows="4" placeholder="로그인 후 이용할 수 있습니다."
+                                              style="background: #fff;" readonly></textarea>
+                                    </div>
+                                </div>
+                                <div class="float-end mt-2 pt-1">
+                                    <button type="button" class="btn btn-primary btn-sm disabled">등록</button>
+                                </div>
+                            </div>
+
+
+                            <!-- 댓글 -->
+                            <div class="row pt-5">
+                                <div class="col">
+                                    <div class="d-flex flex-start mt-4" th:each="list : ${reply}" th:with="replyId=${list.getId()}" th:if="${list.getParentReply()?.getId()==null}">
+                                        <img class="rounded-circle shadow-1-strong me-3"
+                                             th:src="${list.getMember().getPicture()}" alt="avatar" width="65"
+                                             height="65" />
+                                        <div class="flex-grow-1 flex-shrink-1">
+                                            <div class="pb-3">
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <div class="d-flex align-items-center">
+                                                        <p class="mb-1" th:text="${list.getMember().getNickname()}" style="margin-right: 10px"></p>
+                                                        <span class="small" th:text="${#temporals.format(list.getModifiedDate(), 'yyyy.MM.dd HH:mm')}">- 2 hours ago</span>
+                                                    </div>
+                                                    <!-- Example split danger button -->
+                                                    <div class="btn-group" th:if="${member!=null}">
+                                                        <button type="button" class="btn"><span class="small" th:id="writeComment+${replyId}" th:replyId="${replyId}" th:onclick="showComment(this.getAttribute('replyId'))">답글</span></button>
+                                                        <th:block th:if="${member.getId()}==${list.getMember().getId()}">
+                                                            <button type="button" class="btn dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                                                                <span class="visually-hidden">Toggle Dropdown</span>
+                                                            </button>
+                                                            <ul class="dropdown-menu">
+                                                                <li><a class="dropdown-item" th:replyId="${replyId}" th:onclick="showCommentUpdate(this.getAttribute('replyId'))">수정</a></li>
+                                                                <li><a class="dropdown-item" th:replyId="${replyId}" th:onclick="deleteReply(this.getAttribute('replyId'))">삭제</a></li>
+                                                            </ul>
+                                                        </th:block>
+                                                    </div>
+
+                                                </div>
+                                                <p class="small mb-0" th:if="${#strings.equals(list.getRemove(), 'N')}" th:text="${list.getContent()}"></p>
+                                                <p class="small mb-0" th:unless="${#strings.equals(list.getRemove(), 'N')}">삭제된 댓글입니다.</p>
+                                            </div>
+
+                                            <!-- 대댓글 등록 -->
+                                            <div class="card-footer py-3 pt-3 border-0" th:id="comment+${replyId}" style="display: none">
+                                                <div class="d-flex flex-start w-100">
+                                                    <div class="form-outline w-100">
+                                                        <textarea class="form-control" th:id="comment+${replyId}+Save" rows="4"
+                                                                  style="background: #fff;"></textarea>
+                                                    </div>
+                                                </div>
+                                                <div class="float-end mt-2 pt-1">
+                                                    <button type="button" class="btn btn-primary btn-sm" th:replyId="${replyId}" th:onclick="commentSave2(this.getAttribute('replyId'))">등록</button>
+                                                </div>
+                                            </div>
+                                            <!-- 댓글 수정 -->
+                                            <div class="card-footer py-3 pt-3 border-0" th:id="commentUpdateForm+${replyId}" style="display: none">
+                                                <div class="d-flex flex-start w-100">
+                                                    <div class="form-outline w-100">
+                                                        <textarea class="form-control" th:id="commentUpdate+${replyId}" rows="4"
+                                                                  style="background: #fff;"></textarea>
+                                                    </div>
+                                                </div>
+                                                <div class="float-end mt-2 pt-1">
+                                                    <button type="button" class="btn btn-primary btn-sm" th:replyId="${replyId}" th:onclick="commentUpdate(this.getAttribute('replyId'))">수정</button>
+                                                </div>
+                                            </div>
+
+                                            <!-- 대댓글 -->
+                                            <th:block th:if="${list.getReplies().size()>0}">
+
+                                                <div class="d-flex flex-start mt-2" th:each="repliesList : ${list.getReplies()}">
+                                                    <th:block  th:if="${#strings.equals(repliesList.getRemove(), 'N')}">
+                                                        <a class="me-3" href="#">
+                                                            <img class="rounded-circle shadow-1-strong me-3"
+                                                                 th:src="${repliesList.getMember().getPicture()}" alt="avatar" width="65"
+                                                                 height="65" />
+                                                        </a>
+                                                        <div class="flex-grow-1 flex-shrink-1">
+                                                            <div class="pb-3">
+                                                                <div class="d-flex justify-content-between align-items-center">
+                                                                    <div class="d-flex align-items-center">
+                                                                        <p class="mb-1" th:text="${repliesList.getMember().getNickname()}" style="margin-right: 10px"></p>
+                                                                        <span class="small" th:text="${#temporals.format(repliesList.getModifiedDate(), 'yyyy.MM.dd HH:mm')}">- 2 hours ago</span>
+                                                                    </div>
+                                                                    <th:block th:if="${member!=null}">
+                                                                        <div class="btn-group" th:if="${member.getId()}==${repliesList.getMember().getId()}">
+                                                                            <button type="button" class="btn dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                                                                                <span class="visually-hidden">Toggle Dropdown</span>
+                                                                            </button>
+                                                                            <ul class="dropdown-menu">
+                                                                                <li><a class="dropdown-item" th:replyId="${repliesList.getId()}" th:onclick="showCommentUpdate2(this.getAttribute('replyId'))">수정</a></li>
+                                                                                <li><a class="dropdown-item" th:replyId="${repliesList.getId()}" th:onclick="deleteReply(this.getAttribute('replyId'))">삭제</a></li>
+                                                                            </ul>
+                                                                        </div>
+                                                                    </th:block>
+                                                                </div>
+                                                                <p class="small mb-0" th:text="${repliesList.getContent()}"></p>
+                                                            </div>
+                                                            <!-- 대댓글 수정 -->
+                                                            <div class="card-footer py-3 pt-3 border-0" th:id="commentUpdateForm2+${repliesList.getId()}" style="display: none">
+                                                                <div class="d-flex flex-start w-100">
+                                                                    <div class="form-outline w-100">
+                                                                        <textarea class="form-control" th:id="commentUpdate2+${repliesList.getId()}" rows="4"
+                                                                                  style="background: #fff;"></textarea>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="float-end mt-2 pt-1">
+                                                                    <button type="button" class="btn btn-primary btn-sm" th:replyId="${repliesList.getId()}" th:onclick="commentUpdate2(this.getAttribute('replyId'))">수정</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </th:block>
+                                                </div>
+
+                                            </th:block>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</th:block>
+</html>

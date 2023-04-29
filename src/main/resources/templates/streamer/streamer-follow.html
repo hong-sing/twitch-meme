@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="layout/layout">
+<body layout:fragment="content">
+<div class="px-4 py-5 my-5">
+    <div class="p-3">
+        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+            <input class="form-control form-control-sm me-2 w-50" id="streamerFollow" name="streamerFollow" type="search" placeholder="스트리머 닉네임 또는 ID를 입력해주세요" aria-label="Search">
+            <button class="btn btn-outline-success" id="searchStreamerFollow" type="button">검색</button>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+
+    <div class="album py-5 bg-body-tertiary">
+    <div class="container">
+        <th:block th:with="entity=${followList}">
+            <div class="pb-5">
+                <h1 class="col-3 d-inline" th:text="${entity.get(0).getFrom_name()}"></h1>
+                <span class="col-9">이(가) 팔로우하는 스트리머</span>
+            </div>
+            <h6>최대 100명까지 확인 가능합니다.</h6>
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3 pt-3">
+                <div class="col" th:each="list : ${entity}">
+                    <div class="card shadow-sm">
+                        <a th:href="@{/meme/post/{streamer}(streamer=${list.getTo_login()})}">
+                            <div class="card-body">
+                                <p class="card-text" th:text="${list.getTo_name()}">스트리머 닉네임</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <small class="text-body-secondary" th:text="${list.getFollowed_at()}">팔로우 시간</small>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+        </th:block>
+    </div>
+</div>
+
+</div><!-- /.container -->
+</body>
+</html>
+
