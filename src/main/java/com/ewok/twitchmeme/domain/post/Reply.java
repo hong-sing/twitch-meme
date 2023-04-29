@@ -4,6 +4,7 @@ import com.ewok.twitchmeme.domain.BaseTimeEntity;
 import com.ewok.twitchmeme.domain.member.Member;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
@@ -14,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @NoArgsConstructor
-@Data
+@Getter
 @DynamicInsert
 @Entity
 public class Reply extends BaseTimeEntity {

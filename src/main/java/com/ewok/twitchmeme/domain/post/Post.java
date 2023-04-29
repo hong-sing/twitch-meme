@@ -5,13 +5,14 @@ import com.ewok.twitchmeme.domain.member.Member;
 import com.ewok.twitchmeme.domain.report.Report;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
+@Getter
 @NoArgsConstructor
 @Entity
 public class Post extends BaseTimeEntity {
