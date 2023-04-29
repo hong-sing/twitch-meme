@@ -51,6 +51,17 @@ class MemberServiceTest {
         memberRepository.save(member);
     }
 
+
+    @Test
+    void 회원조회() {
+        //when
+        List<Member> list = memberRepository.findAll();
+
+        //then
+        assertThat(list.get(0).getNickname()).isEqualTo("닉네임");
+        assertThat(list.get(0).getPicture()).isEqualTo("이미지");
+    }
+
     @Test
     void 회원탈퇴() {
         //given
