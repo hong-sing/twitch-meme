@@ -5,7 +5,9 @@ let post = {
             _this.goToMemeSavePage();
         });
         $('#save').on('click', function () {
-            _this.save();
+            if (_this.isContent()) {
+                _this.save();
+            }
         });
         $('#updateForm').on('click', function () {
             _this.updateForm();
@@ -163,6 +165,20 @@ let post = {
         }).fail(function (error) {
             alert(JSON.stringify(error));
         });
+    },
+    isContent : function () {
+        let meme = $('#meme').val();
+        let summary = $('#summary').val();
+
+        if (meme == null || meme == '') {
+            alert('밈을 입력해주세요');
+            return false;
+        }
+        if (summary == null || summary == '') {
+            alert('간단한 설명을 입력해주세요');
+            return false;
+        }
+        return true;
     }
 }
 
