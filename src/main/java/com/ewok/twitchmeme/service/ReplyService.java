@@ -9,7 +9,6 @@ import com.ewok.twitchmeme.domain.post.ReplyRepository;
 import com.ewok.twitchmeme.dto.ReplyRequestDto;
 import com.ewok.twitchmeme.dto.ReplyResponseDto;
 import lombok.RequiredArgsConstructor;
-import org.apache.tomcat.util.descriptor.web.JspConfigDescriptorImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -108,4 +107,7 @@ public class ReplyService {
         return replyRepository.findById(replyId).orElseThrow(() -> new IllegalArgumentException("해당 댓글이 없습니다."));
     }
 
+    public List<ReplyResponseDto> findByMemberId(Long memberId) {
+        return replyRepository.findByMemberId(memberId).stream().map(ReplyResponseDto::new).collect(Collectors.toList());
+    }
 }

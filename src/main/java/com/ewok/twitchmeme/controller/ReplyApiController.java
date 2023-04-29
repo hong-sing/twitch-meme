@@ -1,9 +1,14 @@
 package com.ewok.twitchmeme.controller;
 
+import com.ewok.twitchmeme.dto.LoginMember;
 import com.ewok.twitchmeme.dto.ReplyRequestDto;
+import com.ewok.twitchmeme.dto.ReplyResponseDto;
+import com.ewok.twitchmeme.dto.SessionMember;
 import com.ewok.twitchmeme.service.ReplyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -23,5 +28,10 @@ public class ReplyApiController {
         } else {
             return replyService.updateRemoveY(replyId);
         }
+    }
+
+    @GetMapping("/api/v1/reply")
+    public List<ReplyResponseDto> list(@LoginMember SessionMember member) {
+        return replyService.findByMemberId(member.getId());
     }
 }
