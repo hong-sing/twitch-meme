@@ -7,8 +7,8 @@ import com.ewok.twitchmeme.domain.post.Post;
 import com.ewok.twitchmeme.domain.post.PostRepository;
 import com.ewok.twitchmeme.domain.post.Youtube;
 import com.ewok.twitchmeme.domain.post.YoutubeRepository;
-import com.ewok.twitchmeme.dto.PostSaveRequestDto;
-import com.ewok.twitchmeme.dto.PostUpdateRequestDto;
+import com.ewok.twitchmeme.dto.post.PostSaveRequestDto;
+import com.ewok.twitchmeme.dto.post.PostUpdateRequestDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @Transactional
 @ExtendWith(SpringExtension.class)

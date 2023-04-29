@@ -1,8 +1,8 @@
 package com.ewok.twitchmeme.controller;
 
 import com.ewok.twitchmeme.dto.LoginMember;
-import com.ewok.twitchmeme.dto.ReplyRequestDto;
-import com.ewok.twitchmeme.dto.ReplyResponseDto;
+import com.ewok.twitchmeme.dto.reply.ReplyRequestDto;
+import com.ewok.twitchmeme.dto.reply.ReplyResponseDto;
 import com.ewok.twitchmeme.dto.SessionMember;
 import com.ewok.twitchmeme.service.ReplyService;
 import lombok.RequiredArgsConstructor;

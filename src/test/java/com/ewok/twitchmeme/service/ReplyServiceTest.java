@@ -7,7 +7,7 @@ import com.ewok.twitchmeme.domain.post.Post;
 import com.ewok.twitchmeme.domain.post.PostRepository;
 import com.ewok.twitchmeme.domain.post.Reply;
 import com.ewok.twitchmeme.domain.post.ReplyRepository;
-import com.ewok.twitchmeme.dto.ReplyRequestDto;
+import com.ewok.twitchmeme.dto.reply.ReplyRequestDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 //import static org.junit.jupiter.api.Assertions.*;

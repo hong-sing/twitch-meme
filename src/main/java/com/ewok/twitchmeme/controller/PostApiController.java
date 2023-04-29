@@ -1,7 +1,7 @@
 package com.ewok.twitchmeme.controller;
 
-import com.ewok.twitchmeme.dto.PostSaveRequestDto;
-import com.ewok.twitchmeme.dto.PostUpdateRequestDto;
+import com.ewok.twitchmeme.dto.post.PostSaveRequestDto;
+import com.ewok.twitchmeme.dto.post.PostUpdateRequestDto;
 import com.ewok.twitchmeme.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;

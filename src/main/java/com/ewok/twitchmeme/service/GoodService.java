@@ -7,13 +7,12 @@ import com.ewok.twitchmeme.domain.post.GoodRepository;
 import com.ewok.twitchmeme.domain.post.Post;
 import com.ewok.twitchmeme.domain.post.PostRepository;
 import com.ewok.twitchmeme.dto.GoodRequestDto;
-import com.ewok.twitchmeme.dto.PostResponseDto;
+import com.ewok.twitchmeme.dto.post.PostResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service

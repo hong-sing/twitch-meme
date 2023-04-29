@@ -1,4 +1,4 @@
-package com.ewok.twitchmeme.dto;
+package com.ewok.twitchmeme.dto.reply;
 
 import com.ewok.twitchmeme.domain.member.Member;
 import com.ewok.twitchmeme.domain.post.Reply;

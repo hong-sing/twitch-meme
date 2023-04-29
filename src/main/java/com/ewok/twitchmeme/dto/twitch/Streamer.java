@@ -1,4 +1,4 @@
-package com.ewok.twitchmeme.dto;
+package com.ewok.twitchmeme.dto.twitch;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

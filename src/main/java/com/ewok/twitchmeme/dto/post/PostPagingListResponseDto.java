@@ -1,7 +1,6 @@
 package com.ewok.twitchmeme.dto.post;
 
 import com.ewok.twitchmeme.domain.post.Post;
-import com.ewok.twitchmeme.dto.PostResponseDto;
 import lombok.Builder;
 import lombok.Getter;
 

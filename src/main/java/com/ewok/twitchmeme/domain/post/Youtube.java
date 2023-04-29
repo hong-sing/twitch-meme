@@ -14,7 +14,7 @@ public class Youtube {
     @Id @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "POST_ID")
     private Post post;
 
