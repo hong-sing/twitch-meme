@@ -14,7 +14,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
-public class MemberController {
+public class MemberApiController {
 
     private final MemberService memberService;
     private final HttpSession httpSession;
