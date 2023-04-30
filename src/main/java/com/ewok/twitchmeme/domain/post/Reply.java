@@ -20,7 +20,7 @@ import java.util.List;
 @Entity
 public class Reply extends BaseTimeEntity {
 
-    @Id @GeneratedValue(strategy = GenerationType.AUTO)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "REPLY_ID")
     private Long id;
 

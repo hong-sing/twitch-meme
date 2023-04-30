@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 @Entity
 public class Report {
 
-    @Id @GeneratedValue(strategy = GenerationType.AUTO)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
