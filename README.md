@@ -36,3 +36,21 @@
 
 ## 기능 요구사항
 * [기능 요구사항 바로가기](https://github.com/hong-sing/twitch-meme/wiki/2.-%EA%B8%B0%EB%8A%A5-%EC%9A%94%EA%B5%AC-%EC%82%AC%ED%95%AD)
+
+## 정리
+* https://ewok.tistory.com/category/SpringBoot/%EA%B0%9C%EC%9D%B8%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8
+
+## 커밋메시지
+ * https://gist.github.com/stephenparish/9941e89d80e2bc58a153
+ ```
+ feat (feature)
+fix (bug fix)
+docs (documentation)
+style (formatting, missing semi colons, …)
+refactor
+test (when adding missing tests)
+chore (maintain)
+```
+
+## git flow
+* [git flow 바로가기](https://github.com/hong-sing/twitch-meme/wiki/3.-git-flow)
