@@ -85,7 +85,6 @@ public class IndexController {
 
     @GetMapping("/meme/post-meme/{meme}")
     public String searchMeme(Model model, @LoginMember SessionMember member, @PathVariable String meme, Pageable pageable, @RequestParam(required = false, defaultValue = "0", value = "page") int pageNo) {
-        System.out.println(meme);
         if (member != null) {
             model.addAttribute("member", member);
         }
