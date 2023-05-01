@@ -53,7 +53,3 @@ chore (maintain)
 
 ## git flow
 * [git flow 바로가기](https://github.com/hong-sing/twitch-meme/wiki/3.-git-flow)
-
-## 참고 도서
-* [자바 ORM 표준 JPA 프로그래밍](https://search.shopping.naver.com/book/catalog/32436007738?cat_id=50010920&frm=PBOKMOD&query=%EC%9E%90%EB%B0%94+ORM+%ED%91%9C%EC%A4%80+JPA+%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D&NaPm=ct%3Dlh4c73jc%7Cci%3Df6a91fa35c9f8ab5c35dfe0dfdfbfeb595ae567d%7Ctr%3Dboknx%7Csn%3D95694%7Chk%3D928c660f7386a572f5097aafe9646f78c5714eef)
-* [스프링 부트와 AWS로 혼자 구현하는 웹 서비스](https://search.shopping.naver.com/book/catalog/32436253723?cat_id=50010881&frm=PBOKPRO&query=%EC%8A%A4%ED%94%84%EB%A7%81+%EB%B6%80%ED%8A%B8%EC%99%80+AWS%EB%A1%9C+%ED%98%BC%EC%9E%90+%EA%B5%AC%ED%98%84%ED%95%98%EB%8A%94+%EC%9B%B9+%EC%84%9C%EB%B9%84%EC%8A%A4&NaPm=ct%3Dlh49x0ag%7Cci%3D29835e2109f09ab6f8a28af967df642690b44fbb%7Ctr%3Dboknx%7Csn%3D95694%7Chk%3D5877ecc47ebc25fe9d1f36433b89b540c8215af0)
